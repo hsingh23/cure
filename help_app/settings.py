@@ -1,24 +1,31 @@
 # Django settings for help_app project.
+import os.path
+import socket
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Harsh Singh', 'hisingh1@gmail.com'),
 )
 
 MANAGERS = ADMINS
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+LOCAL = socket.gethostname() == 'Frank'
+if LOCAL:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME': 'help_db',                      # Or path to database file if using sqlite3.
+            'USER': '',                      # Not used with sqlite3.
+            'PASSWORD': '',                  # Not used with sqlite3.
+            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        }
     }
-}
+else:
+    import dj_database_url
+    DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -59,7 +66,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(SITE_ROOT, 'help_app/static/')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -152,3 +159,13 @@ LOGGING = {
         },
     }
 }
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+)
+
