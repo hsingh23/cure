@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 {% load staticfiles %}
-  <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/jquery.fancybox.css' %}" rel="stylesheet">
   <style type="text/css">
     body {
@@ -54,54 +54,113 @@
   </div>
 </div>
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span2">
-      <div class="well sidebar-nav">
-        <ul class="nav nav-list">
-          <li><input type="text" class="input-medium search-query" placeholder='Search' id='in-field'></li>
-          <li class="nav-header">Suggested Search</li>
-          <div id="suggested_search"></div>
-          <li class="nav-header">Related Search</li>
-          <div id="related_search"></div>
-          <li class="nav-header">Animated Content</li>
-          <div id="swf"></div>
-          <li><a id='cpp' class="various fancybox.iframe" href="http://www.cplusplus.com/reference/">C++ STL</a></li>
-          <li><a id='java' class="various fancybox.iframe" href="http://docs.oracle.com/javase/6/docs/api/index.html?overview-summary.html">Java STL</a></li>
-          <li class="nav-header">Views</li>
-          <li class="active"><a href="#">Combo</a></li>
-          <li><a href="#">Youtube</a></li>
-          <li><a href="#">Images</a></li>
-          <li><a href="#">Wolfram</a></li>
-          <li><a href="#">Diagrams</a></li>
-          <li><a href="#">Wikipedia</a></li>
-          <li class="nav-header">Misc</li>
-          <li><a href="#">Dinner</a></li>
-        </ul>
-      </div><!--/.well -->
-    </div><!--/span-->
-    <div class="span7">
-      <div id="picture_flow" class="carousel slide">
-    	  <div class="carousel-inner" id="picture_flow_items"></div>
-    	  <a class="carousel-control left" href="#picture_flow" data-slide="prev">&lsaquo;</a>
-    	  <a class="carousel-control right" href="#picture_flow" data-slide="next">&rsaquo;</a>
+
+<div class="row-fluid">
+  <div class="span2">
+    <div class="well sidebar-nav">
+      <ul class="nav nav-list">
+        <li><input type="text" class="input-medium search-query" placeholder='Search' id='in-field'></li>
+        <li class="nav-header">Suggested Search</li>
+        <div id="suggested_search"></div>
+        <li class="nav-header">Related Search</li>
+        <div id="related_search"></div>
+        <li class="nav-header">Animated Content</li>
+        <div id="swf"></div>
+        <li><a id='cpp' class="various fancybox.iframe" href="http://www.cplusplus.com/reference/">C++ STL</a></li>
+        <li><a id='java' class="various fancybox.iframe" href="http://docs.oracle.com/javase/6/docs/api/index.html?overview-summary.html">Java STL</a></li>
+        <li class="nav-header">Misc</li>
+        <li><a href="#">Dinner</a></li>
+      </ul>
+    </div><!--/.well -->
+  </div><!--/span-->
+
+  <div class="span10">
+    <ul class="nav nav-tabs">
+      <li><a href="#combo" data-toggle="tab">Combo</a></li>
+      <li class="active"><a href="#youtube" data-toggle="tab">Youtube</a></li>
+      <li><a href="#images" data-toggle="tab">Images</a></li>
+      <li><a href="#wolfram" data-toggle="tab">Wolfram</a></li>
+      <li><a href="#diagrams" data-toggle="tab">Diagrams</a></li>
+      <li><a href="#wikipedia" data-toggle="tab">Wikipedia</a></li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane" id="combo">
+<!--         <div class="span8">
+          <div id='video_flow' class='carousel slide'>
+            <div class="carousel-inner" id="video_flow_items"></div>
+            <a class="carousel-control left" href="#video_flow" data-slide="prev">&lsaquo;</a>
+            <a class="carousel-control right" href="#video_flow" data-slide="next">&rsaquo;</a>
+          </div>
+          <div id="picture_flow" class="carousel slide">
+              <div class="carousel-inner">
+                <div class="item active">
+                  <ul class="thumbnails" id="thumbnails_active_items"></ul>
+                </div>
+                <div class="item">
+                  <ul class="thumbnails" id="thumbnails_items"></ul>
+                </div>
+              </div>
+              <a class="carousel-control left" href="#picture_flow" data-slide="prev">&lsaquo;</a>
+              <a class="carousel-control right" href="#picture_flow" data-slide="next">&rsaquo;</a>
+          </div>
+        </div> --><!--/span-->
+<!--         <div class="span3">
+            <h2 class="wiki_title"></h2>
+            <div class="wiki_extract"></div>
+        </div> --><!--/span-->
       </div>
-      <div id='video_flow' class='carousel slide'>
-        <div class="carousel-lower" id="video_flow_items"></div>
-        <a class="carousel-control left" href="#video_flow" data-slide="prev">&lsaquo;</a>
-        <a class="carousel-control right" href="#video_flow" data-slide="next">&rsaquo;</a>
-  	  </div> 
-    </div><!--/span-->
-    <div class="span3">
-        <h2 id="wiki_title"></h2>
-        <div id="wiki_extract"></div>
-    </div><!--/span-->
-</div><!--/row-->
+      <div class="tab-pane active" id="youtube">
+        <div class="span10">
+          <div id='video_flow' class='carousel slide'>
+            <div class="carousel-inner" id="video_flow_items"></div>
+            <a class="carousel-control left" href="#video_flow" data-slide="prev">&lsaquo;</a>
+            <a class="carousel-control right" href="#video_flow" data-slide="next">&rsaquo;</a>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" id="images">
+        <div class="span10">
+          <div id="picture_flow" class="carousel slide">
+              <div class="carousel-inner">
+                <div class="item active">
+                  <ul class="thumbnails" id="thumbnails_active_items"></ul>
+                </div>
+                <div class="item">
+                  <ul class="thumbnails" id="thumbnails_items"></ul>
+                </div>
+              </div>
+              <a class="carousel-control left" href="#picture_flow" data-slide="prev">&lsaquo;</a>
+              <a class="carousel-control right" href="#picture_flow" data-slide="next">&rsaquo;</a>
+    <!--      <a data-slide="prev" href="#picture_flow" class="left carousel-control">‹</a>
+              <a data-slide="next" href="#picture_flow" class="right carousel-control">›</a> -->
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" id="wolfram">Wolfram
 
-<hr>
 
-</div><!--/.fluid-container-->
+      </div>
+      <div class="tab-pane" id="diagrams">Diagrams
 
+
+      </div>
+      <div class="tab-pane" id="wikipedia">
+        <div class="span10">
+            <h2 class="wiki_title"></h2>
+            <div class="wiki_extract"></div>
+        </div><!--/span-->
+      </div>
+    </div>
+     <!-- 
+<script>
+  $(function () {
+    $('#myTab a:last').tab('show');
+  })
+</script>
+ -->
+  </div>
+
+</div>
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -110,30 +169,30 @@
     <script src="http://yui.yahooapis.com/3.4.1pr1/build/yui/yui-min.js"></script>
 
     <!-- Custom Loadfirst JS -->
-    <script src="{% static 'js/bootstrap-carousel.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/jquery.mousewheel-3.0.6.pack.js' %}"></script>
     <script src="{% static 'js/jquery.fancybox.pack.js' %}"></script>
     
-    <script src="{% static 'tools/Help/help_page.js' %}"></script>
+    <script src="{% static 'js/help_page.js' %}"></script>
     <!-- // <script src="{% static 'js/jquery.lint.js' %}"></script> -->
 
 
     <!-- /Custom Loadfirst JS -->
 
     <!-- 
-	    <script src="{% static 'js/jquery.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-transition.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-alert.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-modal.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-dropdown.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-scrollspy.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-tab.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-tooltip.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-popover.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-button.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-collapse.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-carousel.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-typeahead.js' %}"></script>
-	 -->
+      <script src="{% static 'js/jquery.js' %}"></script>
+      <script src="{% static 'js/bootstrap-transition.js' %}"></script>
+      <script src="{% static 'js/bootstrap-alert.js' %}"></script>
+      <script src="{% static 'js/bootstrap-modal.js' %}"></script>
+      <script src="{% static 'js/bootstrap-dropdown.js' %}"></script>
+      <script src="{% static 'js/bootstrap-scrollspy.js' %}"></script>
+      <script src="{% static 'js/bootstrap-tab.js' %}"></script>
+      <script src="{% static 'js/bootstrap-tooltip.js' %}"></script>
+      <script src="{% static 'js/bootstrap-popover.js' %}"></script>
+      <script src="{% static 'js/bootstrap-button.js' %}"></script>
+      <script src="{% static 'js/bootstrap-collapse.js' %}"></script>
+      <script src="{% static 'js/bootstrap-carousel.js' %}"></script>
+      <script src="{% static 'js/bootstrap-typeahead.js' %}"></script>
+   -->
   </body>
 </html>

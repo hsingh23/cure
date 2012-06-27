@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 {% load staticfiles %}
-  <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/jquery.fancybox.css' %}" rel="stylesheet">
   <style type="text/css">
     body {
@@ -81,16 +81,25 @@
       </div><!--/.well -->
     </div><!--/span-->
     <div class="span7">
-      <div id="picture_flow" class="carousel slide">
-    	  <div class="carousel-inner" id="picture_flow_items"></div>
-    	  <a class="carousel-control left" href="#picture_flow" data-slide="prev">&lsaquo;</a>
-    	  <a class="carousel-control right" href="#picture_flow" data-slide="next">&rsaquo;</a>
-      </div>
       <div id='video_flow' class='carousel slide'>
-        <div class="carousel-lower" id="video_flow_items"></div>
+        <div class="carousel-inner" id="video_flow_items"></div>
         <a class="carousel-control left" href="#video_flow" data-slide="prev">&lsaquo;</a>
         <a class="carousel-control right" href="#video_flow" data-slide="next">&rsaquo;</a>
-  	  </div> 
+      </div>
+      <div id="picture_flow" class="carousel slide">
+          <div class="carousel-inner">
+            <div class="item active">
+              <ul class="thumbnails" id="thumbnails_active_items"></ul>
+            </div>
+            <div class="item">
+              <ul class="thumbnails" id="thumbnails_items"></ul>
+            </div>
+          </div>
+          <a class="carousel-control left" href="#picture_flow" data-slide="prev">&lsaquo;</a>
+          <a class="carousel-control right" href="#picture_flow" data-slide="next">&rsaquo;</a>
+<!--      <a data-slide="prev" href="#picture_flow" class="left carousel-control">‹</a>
+          <a data-slide="next" href="#picture_flow" class="right carousel-control">›</a> -->
+      </div>
     </div><!--/span-->
     <div class="span3">
         <h2 id="wiki_title"></h2>
@@ -110,30 +119,30 @@
     <script src="http://yui.yahooapis.com/3.4.1pr1/build/yui/yui-min.js"></script>
 
     <!-- Custom Loadfirst JS -->
-    <script src="{% static 'js/bootstrap-carousel.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/jquery.mousewheel-3.0.6.pack.js' %}"></script>
     <script src="{% static 'js/jquery.fancybox.pack.js' %}"></script>
     
-    <script src="{% static 'tools/Help/help_page.js' %}"></script>
+    <script src="{% static 'js/help_page.js' %}"></script>
     <!-- // <script src="{% static 'js/jquery.lint.js' %}"></script> -->
 
 
     <!-- /Custom Loadfirst JS -->
 
     <!-- 
-	    <script src="{% static 'js/jquery.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-transition.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-alert.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-modal.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-dropdown.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-scrollspy.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-tab.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-tooltip.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-popover.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-button.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-collapse.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-carousel.js' %}"></script>
-	    <script src="{% static 'js/bootstrap-typeahead.js' %}"></script>
-	 -->
+      <script src="{% static 'js/jquery.js' %}"></script>
+      <script src="{% static 'js/bootstrap-transition.js' %}"></script>
+      <script src="{% static 'js/bootstrap-alert.js' %}"></script>
+      <script src="{% static 'js/bootstrap-modal.js' %}"></script>
+      <script src="{% static 'js/bootstrap-dropdown.js' %}"></script>
+      <script src="{% static 'js/bootstrap-scrollspy.js' %}"></script>
+      <script src="{% static 'js/bootstrap-tab.js' %}"></script>
+      <script src="{% static 'js/bootstrap-tooltip.js' %}"></script>
+      <script src="{% static 'js/bootstrap-popover.js' %}"></script>
+      <script src="{% static 'js/bootstrap-button.js' %}"></script>
+      <script src="{% static 'js/bootstrap-collapse.js' %}"></script>
+      <script src="{% static 'js/bootstrap-carousel.js' %}"></script>
+      <script src="{% static 'js/bootstrap-typeahead.js' %}"></script>
+   -->
   </body>
 </html>
