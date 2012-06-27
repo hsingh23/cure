@@ -1,9 +1,3 @@
-# Django settings for help_app project.
-import os.path
-import socket
-
-# 
-LOCAL = not socket.gethostname() == '076447a0-e278-4402-8b43-1585cf293a82'
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -14,20 +8,17 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-if LOCAL:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-            'NAME': 'help_app_db',                      # Or path to database file if using sqlite3.
-            'USER': '',                      # Not used with sqlite3.
-            'PASSWORD': '',                  # Not used with sqlite3.
-            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'help_app_db',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
-else:
-    import dj_database_url
-    DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
+}
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -171,8 +162,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 # Production Server Settings
 # SURE this should be a seperate file. What about it.
-if not LOCAL:
-    DEBUG = False
-    TEMPLATE_DEBUG = False
-    STATIC_URL = 'http://statics.site50.net/'
-    STATIC_ROOT = ''
+try:
+    if os.environ['PRODUCTION'] == True:
+        DEBUG = False
+        TEMPLATE_DEBUG = False
+        STATIC_URL = 'http://statics.site50.net/'
+        STATIC_ROOT = ''
+        import dj_database_url
+        DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
+except:
+    pass
+
