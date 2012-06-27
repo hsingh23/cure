@@ -5,8 +5,7 @@ from django.conf.urls.defaults import *
 from django.contrib import admin
 admin.autodiscover()
 
-# from help_app.views
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+# from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = patterns('help_app.views',
     # Examples:
@@ -22,4 +21,4 @@ urlpatterns = patterns('help_app.views',
     url(r'^admin/', include(admin.site.urls)),
 )
 
-urlpatterns += staticfiles_urlpatterns()
+# urlpatterns += staticfiles_urlpatterns()
