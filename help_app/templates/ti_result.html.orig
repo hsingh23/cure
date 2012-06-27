@@ -1,0 +1,35 @@
+{% extends "ti_base.html" %}
+
+{% block taskname %}
+<h2>{{ task }} {{ status }}</h2>
+{% endblock %}
+
+{% block content %}
+{% if status == "failed" %}
+{% if exceptions %}
+{% for e in exceptions %}
+<p>{{ e }}</p>
+{% endfor %}
+{% endif %}
+<a href="javascript:history.go(-1)" class="backlink">Go back</a>
+{% else %}
+{% if task == "Add user" %}
+<a href="/ti/user" class="addlink">Add another one?</a>
+{% endif %}
+{% if task == "Change user" %}
+<a href="/ti/user_change" class="addlink">Change another one?</a>
+{% endif %}
+{% if task == "Add column" %}
+<a href="/ti/column" class="addlink">Add another one?</a>
+{% endif %}
+{% if task == "Change column" %}
+<a href="/ti/column_change" class="addlink">Change another one?</a>
+{% endif %}
+{% if task == "Grade entry(single entries)" %}
+<a href="/ti/grade/?mode=single" class="addlink">Add another one?</a>
+{% endif %}
+{% if task == "Grade entry(mass import)" %}
+<a href="/ti/grade/?mode=mass" class="addlink">Add another one?</a>
+{% endif %}
+{% endif %}
+{% endblock %}

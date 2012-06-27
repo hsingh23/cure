@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block headscript %}
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+        </link>
+        <style type="text/css">
+            body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+            }
+            .sidebar-nav {
+            padding: 9px 0;
+            }
+            .drop-right {
+            top: 0;
+            left: 100px;
+            }
+            .to-form-right {
+            text-align: right;
+            margin-right: 30px;
+            }
+        </style>
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="{% static 'js/bootstrap-tab.js' %}"></script>
+        <script src="{% static 'js/bootstrap-dropdown.js' %}"></script>
+        <script src="{% static 'js/bootstrap-alert.js' %}"></script>
+        <script src="{% static 'js/bootstrap-collapse.js' %}"></script>
+        <script src="{% static 'js/bootstrap-tooltip.js' %}"></script>
+        <script src="{% static 'js/bootstrap-popover.js' %}"></script>
+        {% endblock %}
+        <title>{% block title %}Success Book Text Input{% endblock %}</title>
+    </head>
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="/ti/">Success Book</a>
+                    <div class="btn-group pull-right">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="icon-user"></i> Username
+                        <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Profile</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Sign Out</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-collapse">
+                        <ul class="nav">
+                            <li class="active"><a href="/ti/">Home</a></li>
+                            <li><a href="#about">About</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span2">
+                    {% block sidebar %}
+                    <ul class="nav nav-pills nav-stacked">
+                        <li class="active"><a href="/ti/">Home</a></li>
+                        <li><a href="/ti/user/">User</a></li>
+                        <li><a href="/ti/column/">Column</a></li>
+                        <li><a href="/ti/grade/">Grade</a></li>
+                    </ul>
+                    {% endblock %}
+                </div>
+                <div class="span10">
+                    {% block content %}
+                    <h1>Welcome!</h1>
+                    <br />
+                    <p>Please choose task from left side bar.</p>
+                    <br />
+                    <img src="{% static 'img/burger.jpg' %}" height=400 width=400 class="pull-right"/>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
