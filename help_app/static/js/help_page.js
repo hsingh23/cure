@@ -123,7 +123,7 @@ function load_results(orig_search){
 	//wikipedia
 	// /w/api.php?action=query&prop=extracts&format=json&exlimit=10&exintro=&exsectionformat=plain&titles=AVL_tree
 	var wikipedia_url = 'http://www.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&explaintext=&exsectionformat=plain&titles='+wiki_search+'&redirects&callback=?';
-	console.log(wikipedia_url);
+	// console.log(wikipedia_url);
 	$.getJSON(wikipedia_url, function(data) {
 		var heading;
 		var extract;
@@ -192,7 +192,7 @@ function load_results(orig_search){
 		//$("iframe").each(function() {
 		//  this.contentWindow.postMessage('{ "method": "pause" }', "http://www.youtube.com/embed/'+val.id+'?wmode=transparent");
 		//});
-		console.log(videos);
+		// console.log(videos);
 		vid_flow.append(videos.join('\n'));
 	});
 
