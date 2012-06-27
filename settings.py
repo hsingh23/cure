@@ -164,7 +164,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # Production Server Settings
 # SURE this should be a seperate file. What about it.
 try:
-    if os.environ['PRODUCTION'] == True:
+    if os.environ['PRODUCTION'] == 'True':
         DEBUG = False
         TEMPLATE_DEBUG = False
         STATIC_URL = 'http://statics.site50.net/'
