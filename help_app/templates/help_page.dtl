@@ -88,7 +88,7 @@
     	  <a class="carousel-control right" href="#picture_flow" data-slide="next">&rsaquo;</a>
       </div>
       <div id='video_flow' class='carousel slide'>
-        <div class="carousel-lower" id="video_flow_items"></div>
+        <div class="carousel-inner" id="video_flow_items"></div>
         <a class="carousel-control left" href="#video_flow" data-slide="prev">&lsaquo;</a>
         <a class="carousel-control right" href="#video_flow" data-slide="next">&rsaquo;</a>
   	  </div> 
@@ -111,9 +111,10 @@
     <script src="http://yui.yahooapis.com/3.4.1pr1/build/yui/yui-min.js"></script>
 
     <!-- Custom Loadfirst JS -->
-    <script src="{% static 'js/bootstrap-carousel.js' %}"></script>
+    <script src="{% static 'js/bootstrap-carousel.js' %}"></script>   <!-- do not use bootstrap.min.js -->
     <script src="{% static 'js/jquery.mousewheel-3.0.6.pack.js' %}"></script>
-    <script src="{% static 'js/jquery.fancybox.pack.js' %}"></script>    
+    <script src="{% static 'js/jquery.fancybox.pack.js' %}"></script>
+    
     <script src="{% static 'js/help_page.js' %}"></script>
     <!-- // <script src="{% static 'js/jquery.lint.js' %}"></script> -->
 

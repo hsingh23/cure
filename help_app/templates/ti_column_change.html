@@ -1,0 +1,168 @@
+{% extends "ti_base.html" %}
+
+{% block taskname %}
+<h2>Change Column</h2>
+{% endblock %}
+
+{% block headscript %}
+{{ block.super }}
+<script type="text/javascript">
+	function calcAcl(){
+		var read = 0;
+		var write = 0;
+		var access = 0;
+		var pos = 0;
+		for(var i=0;i<window.document.cform.elements.length;i++) 
+		{ 
+			var e = cform.elements[i]; 
+			if(e.type=="checkbox"){
+				var ename = e.name;
+				pos = ename.substr(1);
+				if(e.checked==true)
+					access = 1;
+				else
+					access = 0;
+				access = access << pos;
+				if(ename.charAt(0)=="r")
+					read = read | access;
+				else
+					write = write | access;
+			}
+		}
+		access = read << 16;
+		access = access | write;
+		document.getElementById('acl_h').value = access;
+	}
+	
+	function setAcl(){
+		for(var i=0;i<window.document.cform.elements.length;i++) 
+		{ 
+			var e = cform.elements[i]; 
+			if(e.type=="checkbox"){
+				e.checked = false;
+			}
+		}
+		var access = document.getElementById('acl_h').value;
+		var read = access >> 16;
+		var write = access;
+		var pos = 0;
+		for(var i=0;i<window.document.cform.elements.length;i++) 
+		{ 
+			var e = cform.elements[i]; 
+			if(e.type=="checkbox"){
+				var ename = e.name;
+				pos = ename.substr(1);
+				var read = access >> 16;
+				read = read >> pos;
+				var write = access;
+				write = write >> pos;
+				read = read & 1;
+				write = write & 1;
+				if(ename.charAt(0)=="r"){
+					if(read == 1)
+						e.checked = true;
+				}
+				else{
+					if(write == 1)
+						e.checked = true;
+				}
+			}
+		}
+	}
+	
+	var tmps = new Array();
+	tmps[-1] = {
+		"cname":"",
+		"min":"",
+		"max":"",
+		"weight":"",
+		"meta":"",
+		"acl":""
+		};
+	{% for c in column_info.rows %}
+	tmps[{{c.column_id}}] = {
+		"cname":"{{c.name}}",
+		"min":"{{c.min}}",
+		"max":"{{c.max}}",
+		"weight":"{{c.weight}}",
+		"meta":"{{c.meta}}",
+		"acl":"{{c.acl}}"
+		};
+	{% endfor %}
+	
+	function applyTemplate(){
+		var temp = tmps[document.getElementById('template').value];
+		document.getElementById('cname').value = temp.cname;
+		document.getElementById('min').value = temp.min;
+		document.getElementById('max').value = temp.max;
+		document.getElementById('weight').value = temp.weight;
+		document.getElementById('meta').value = temp.meta;
+		document.getElementById('acl_h').value = temp.acl;
+		setAcl();
+	}
+	
+	function checkColumn(){
+		if(document.getElementById('template').value==-1){
+			alert("Please select the column to change.");
+			return false;
+		}
+		return true;
+	}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<form action="/ti/column/change/" method="post" name="cform" id="cform" >
+	<div>
+	<fieldset id="ci">
+		<legend>Column Info</legend>
+		<label for="template">Column:</label>
+		<select name="template" id="template" onchange="applyTemplate();">
+			<option value=-1 selected="selected">Select</option>
+			{% for c in column_info.rows %}
+			<option value={{c.column_id}}>{{c.name}}</option>
+			{% endfor %}
+		</select>
+		<br />
+		<label for="cname">Name: (*)</label>
+		<input type="text" name="cname" id="cname" />
+		<br />
+		<label for="min">Min: (*)</label>
+		<input type="text" name="min" id="min" />
+		<br />
+		<label for="max">Max: (*)</label>
+		<input type="text" name="max" id="max" />
+		<br />
+		<label for="weight">Weight: (*)</label>
+		<input type="text" name="weight" id="weight" style="width:8em"/> %
+		<br />
+		<label for="meta">Meta:</label>
+		<input type="text" name="meta" id="meta" />
+	</fieldset>
+	<div id="acl">
+	<fieldset>
+		<legend>Access Level Control</legend>
+		<table border="0">
+			<tr>
+				<td> </td>
+				<td>Read</td>
+				<td>Write</td>
+			</tr>
+			{% for g in group_info.rows %}
+			<tr>
+				<td>{{g.name}}</td>
+				<td><input type="checkbox" name="r{{forloop.counter0}}" /></td>
+				<td><input type="checkbox" name="w{{forloop.counter0}}" /></td>
+			</tr>
+			{% endfor %}
+		</table>
+	</fieldset>
+	<input type="hidden" name="acl_h" id="acl_h" value="" />
+	<input type="submit" value="Confirm" style="float:right; margin-top:4px" onclick="calcAcl(); return checkColumn();"/>
+	<input type="reset" value="Reset" style="float:right; margin-top:4px" />
+	</div>
+</div>
+</form>
+<p id="note"><i>*: required fields</i></p>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "ti_base.html" %}
+
+{% block taskname %}
+<h2>Add Group</h2>
+{% endblock %}
+
+{% block content %}
+<h3>Existing Groups:</h3>
+<div style="float:left">
+<table border="0" cellspacing="10" frame="hsides">
+	<tr>
+		<th>Group Name</th>
+		<th>Group ID</th>
+	</tr>
+	{% for g in group_info.rows %}
+	{% for r in g %}
+	<tr>
+		<td align="left">{{r.name}}</td>
+		<td align="center">{{r.group_id}}</td>
+	</tr>	
+	{% endfor %}
+	{% endfor %}
+</table>
+</div>
+
+
+<div style="float:left; margin-left:30px">
+<form action ="/ti/group/create/" method="post">
+	<fieldset>
+		<legend>Add Group</legend>
+		<label for="gname">Name:</label>
+		<input type="text" name="gname" id="gname"/>
+	</fieldset>
+	<input type="submit" value="Create" style="float:right; margin-top:4px" />
+</form>
+</div>
+
+<p id="note"><i>Note: Group ID is unique, ranging from 0 to 15.</i></p>
+{% endblock %}

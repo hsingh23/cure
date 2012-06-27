@@ -1,0 +1,64 @@
+<!--  -->
+<!DOCTYPE html>
+
+<html>
+	{% load staticfiles %}
+
+	<head>
+
+		<!-- Global Styling Properties -->
+		<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"></link>
+
+		<!-- Global Scripts -->
+		<script src="{% static 'js/tool_manager.js' %}"></script>
+		<!-- TODO: For now, only javascript files are handled by the visualization tool.  If necessary, support should be added in order
+		to allow for different scripting languages to be used within the library and imported here. -->
+		{% for library_file in library %}
+			<script src="{% static library_file %}"></script>
+		{% endfor %}
+
+		<!-- Library/Local Scripts -->
+		{% for tool in toolbox %}
+			{% for tool_dependency in tool.dependencies %}
+				<!-- Add more conditional branches here to deal with more file types than just javascript and CSS. -->
+				{% if tool_dependency.type == 'js' %}
+					<script src="{% static tool_dependency.path %}"></script>
+				{% elif tool_dependency.type == 'css' %}
+					<link rel="stylesheet" href="{% static tool_dependency.path %}"></link>
+				{% endif %}
+			{% endfor %}
+		{% endfor %}
+		<!-- Title -->
+		<title>Success Book: {{view}} View</title>
+	</head>
+
+	<body style="padding-top: 45px;">
+		<!-- Navigation  -->
+		<div class="navbar navbar-fixed-top">
+      			<div class="navbar-inner">
+       				<div class="container">
+         				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            					<span class="icon-bar"></span>
+            					<span class="icon-bar"></span>
+            					<span class="icon-bar"></span>
+          				</a>
+				        <a class="brand" href="#">Success Book</a>
+          				<div class="nav-collapse">
+            					<ul class="nav">
+								{% for tool in toolbox %}
+									<li onclick="change_tools('{{tool.name}}')"><a href="#">{{tool.name}}</a></li>
+								{% endfor %}
+
+	      						<!--<li class="active"><a href="#">Home</a></li>
+              						<li><a href="#about">About</a></li>
+              						<li><a href="#contact">Contact</a></li>-->
+            					</ul>
+          				</div><!--/.nav-collapse -->
+        			</div>
+      			</div>
+    		</div>
+
+		<!-- Content (Note: this is the area on the page in which the tools should place their content) -->		
+		<div class="container" id="tool_container"></div>
+	</body>
+</html>
