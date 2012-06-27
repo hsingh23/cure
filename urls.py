@@ -12,6 +12,7 @@ urlpatterns = patterns('help_app.views',
     # url(r'^$', 'help_app.views.home', name='home'),
     # url(r'^help_app/', include('help_app.foo.urls')),
     url(r'^help/$', 'help'),
+    url(r'^$', 'help'),
     url(r'^help(\d{1,2})/$', 'help_itter'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
