@@ -2,16 +2,18 @@
 import os.path
 import socket
 
+# 
+LOCAL = not socket.gethostname() == '076447a0-e278-4402-8b43-1585cf293a82'
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+
 
 ADMINS = (
     ('Harsh Singh', 'hisingh1@gmail.com'),
 )
 
 MANAGERS = ADMINS
-LOCAL = socket.gethostname() == 'Frank'
 if LOCAL:
     DATABASES = {
         'default': {
@@ -70,7 +72,7 @@ STATIC_ROOT = os.path.join(SITE_ROOT, 'help_app/static/')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = 'http://statics.site50.net/'
+
 STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 # Additional locations of static files
@@ -167,3 +169,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
 )
 
+# Production Server Settings
+# SURE this should be a seperate file. What about it.
+if not LOCAL:
+    DEBUG = False
+    TEMPLATE_DEBUG = False
+    STATIC_URL = 'http://statics.site50.net/'
+    STATIC_ROOT = ''
