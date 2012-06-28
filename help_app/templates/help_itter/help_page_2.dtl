@@ -75,90 +75,49 @@
   </div><!--/span-->
 
   <div class="span10">
-    <ul class="nav nav-tabs">
-      <li><a href="#combo" data-toggle="tab">Combo</a></li>
-      <li class="active"><a href="#youtube" data-toggle="tab">Youtube</a></li>
+    <ul class="nav nav-tabs" id="myTab">
+      <li class="active"><a href="#combo" data-toggle="tab">Combo</a></li>
+      <li><a href="#youtube" data-toggle="tab">Youtube</a></li>
       <li><a href="#images" data-toggle="tab">Images</a></li>
       <li><a href="#wolfram" data-toggle="tab">Wolfram</a></li>
-      <li><a href="#diagrams" data-toggle="tab">Diagrams</a></li>
+      <li><a href="#pdf" data-toggle="tab">PDF</a></li>
+      <li><a href="#swf" data-toggle="tab">SWF</a></li>
       <li><a href="#wikipedia" data-toggle="tab">Wikipedia</a></li>
     </ul>
+
     <div class="tab-content">
-      <div class="tab-pane" id="combo">
-<!--         <div class="span8">
-          <div id='video_flow' class='carousel slide'>
-            <div class="carousel-inner" id="video_flow_items"></div>
-            <a class="carousel-control left" href="#video_flow" data-slide="prev">&lsaquo;</a>
-            <a class="carousel-control right" href="#video_flow" data-slide="next">&rsaquo;</a>
-          </div>
-          <div id="picture_flow" class="carousel slide">
-              <div class="carousel-inner">
-                <div class="item active">
-                  <ul class="thumbnails" id="thumbnails_active_items"></ul>
-                </div>
-                <div class="item">
-                  <ul class="thumbnails" id="thumbnails_items"></ul>
-                </div>
-              </div>
-              <a class="carousel-control left" href="#picture_flow" data-slide="prev">&lsaquo;</a>
-              <a class="carousel-control right" href="#picture_flow" data-slide="next">&rsaquo;</a>
-          </div>
-        </div> --><!--/span-->
-<!--         <div class="span3">
-            <h2 class="wiki_title"></h2>
-            <div class="wiki_extract"></div>
-        </div> --><!--/span-->
-      </div>
-      <div class="tab-pane active" id="youtube">
-        <div class="span10">
-          <div id='video_flow' class='carousel slide'>
-            <div class="carousel-inner" id="video_flow_items"></div>
-            <a class="carousel-control left" href="#video_flow" data-slide="prev">&lsaquo;</a>
-            <a class="carousel-control right" href="#video_flow" data-slide="next">&rsaquo;</a>
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane" id="images">
-        <div class="span10">
-          <div id="picture_flow" class="carousel slide">
-              <div class="carousel-inner">
-                <div class="item active">
-                  <ul class="thumbnails" id="thumbnails_active_items"></ul>
-                </div>
-                <div class="item">
-                  <ul class="thumbnails" id="thumbnails_items"></ul>
-                </div>
-              </div>
-              <a class="carousel-control left" href="#picture_flow" data-slide="prev">&lsaquo;</a>
-              <a class="carousel-control right" href="#picture_flow" data-slide="next">&rsaquo;</a>
-    <!--      <a data-slide="prev" href="#picture_flow" class="left carousel-control">‹</a>
-              <a data-slide="next" href="#picture_flow" class="right carousel-control">›</a> -->
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane" id="wolfram">Wolfram
-
-
-      </div>
-      <div class="tab-pane" id="diagrams">Diagrams
-
-
-      </div>
-      <div class="tab-pane" id="wikipedia">
-        <div class="span10">
-            <h2 class="wiki_title"></h2>
-            <div class="wiki_extract"></div>
-        </div><!--/span-->
-      </div>
+      <div class="tab-pane active" id="combo"></div>
+      <div class="tab-pane" id="youtube"></div>
+      <div class="tab-pane" id="images"></div>
+      <div class="tab-pane" id="wolfram">Wolfram</div>
+      <div class="tab-pane" id="pdf">PDF</div>
+      <div class="tab-pane" id="swf">SWF</div>
+      <div class="tab-pane" id="wikipedia"></div>
     </div>
-     <!-- 
-<script>
-  $(function () {
-    $('#myTab a:last').tab('show');
-  })
-</script>
- -->
   </div>
+  <div class="span7" id="video_image_span">
+    <div id="video_flow" class='carousel slide'>
+      <div class="carousel-inner" id="video_flow_items"></div>
+      <a class="carousel-control left" href="#video_flow" data-slide="prev">&lsaquo;</a>
+      <a class="carousel-control right" href="#video_flow" data-slide="next">&rsaquo;</a>
+    </div>
+    <div id="picture_flow" class="carousel slide">
+      <div class="carousel-inner">
+        <div class="item active">
+          <ul class="thumbnails" id="thumbnails_active_items"></ul>
+        </div>
+        <div class="item">
+          <ul class="thumbnails" id="thumbnails_items"></ul>
+        </div>
+      </div>
+      <a class="carousel-control left" href="#picture_flow" data-slide="prev">&lsaquo;</a>
+      <a class="carousel-control right" href="#picture_flow" data-slide="next">&rsaquo;</a>
+    </div>
+  </div><!--/span-->
+  <div class="span3" id="wiki_text">
+    <h2 class="wiki_title"></h2>
+    <div class="wiki_extract"></div>
+  </div><!--/span-->
 
 </div>
     <!-- Le javascript
@@ -173,7 +132,7 @@
     <script src="{% static 'js/jquery.mousewheel-3.0.6.pack.js' %}"></script>
     <script src="{% static 'js/jquery.fancybox.pack.js' %}"></script>
     
-    <script src="{% static 'js/help_page.js' %}"></script>
+    <script src="{% static 'js/help_page_2.js' %}"></script>
     <!-- // <script src="{% static 'js/jquery.lint.js' %}"></script> -->
 
 
