@@ -109,9 +109,9 @@ function load_results(orig_search){
 	// console.log('called with '+search);
 
 	// var pic_flow = $('#picture_flow_items');
-	var pic_flow_active = $('.thumbnails_active_items');
-	var pic_flow = $('.thumbnails_items');
-	var vid_flow = $('.video_flow_items');
+	var pic_flow_active = $('#thumbnails_active_items');
+	var pic_flow = $('#thumbnails_items');
+	var vid_flow = $('#video_flow_items');
 	pic_flow_active.empty();
 	pic_flow.empty();
 	vid_flow.empty();
@@ -161,9 +161,9 @@ function load_results(orig_search){
 				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" width="100%"></a></div></li>');
 			}
 		});
+
 		pic_flow.append(items.join('\n'));
 		pic_flow_active.append(items_active.join('\n'));
-
 	});
 	//Get images from bing
 	//#######warning: is depricated and will stop working August 1 2012
@@ -187,7 +187,7 @@ function load_results(orig_search){
 		//$('iframe#videos').attr('src',''); 
 		$.each(data.data.items, function(index, val) {
 			var active = (index===1)?' active':'';
-			videos.push('<div class="item'+active+'"class="center"><iframe class="youtube-player" id="videos" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent" frameborder="0"></iframe></div>');			
+			videos.push('<div class="item'+active+'"class="center"><iframe class="youtube-player" id="videos" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent" frameborder="0"></iframe></div>');
 		});
 		//$("iframe").each(function() {
 		//  this.contentWindow.postMessage('{ "method": "pause" }', "http://www.youtube.com/embed/'+val.id+'?wmode=transparent");
@@ -237,7 +237,68 @@ YUI().use('autocomplete', 'autocomplete-highlighters', function(Y) {
 	});
 });
 
+$('#myTab a[href="#combo"]').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+  $('#video_image_span').show().removeClass("span9").addClass("span7");
+  $('#video_flow').show();
+  $('#picture_flow').show();
+  $('#wiki_text').show().removeClass("span10").addClass("span3");
+});
 
+$('#myTab a[href="#youtube"]').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+  $('#video_image_span').show().removeClass("span7").addClass("span9");
+  $('#video_flow').show();
+  $('#picture_flow').hide();
+  $('#wiki_text').hide().removeClass("span10").addClass("span3");
+});
+
+$('#myTab a[href="#images"]').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+  $('#video_image_span').show().removeClass("span7").addClass("span9");
+  $('#video_flow').hide();
+  $('#picture_flow').show();
+  $('#wiki_text').hide().removeClass("span10").addClass("span3");
+});
+
+$('#myTab a[href="#wolfram"]').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+  $('#video_image_span').show();
+  $('#video_flow').hide();
+  $('#picture_flow').hide();
+  $('#wiki_text').hide().removeClass("span10").addClass("span3");
+});
+
+$('#myTab a[href="#pdf"]').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+  $('#video_image_span').show();
+  $('#video_flow').hide();
+  $('#picture_flow').hide();
+  $('#wiki_text').hide().removeClass("span10").addClass("span3");
+});
+
+$('#myTab a[href="#swf"]').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+  $('#video_image_span').show();
+  $('#video_flow').hide();
+  $('#picture_flow').hide();
+  $('#wiki_text').hide().removeClass("span10").addClass("span3");
+});
+
+$('#myTab a[href="#wikipedia"]').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+  $('#video_image_span').hide();
+  $('#video_flow').hide();
+  $('#picture_flow').hide();
+  $('#wiki_text').show().removeClass("span3").addClass("span10");
+});
 // https://api.datamarket.azure.com/Data.ashx/Bing/Search/Image?Query=%27binary%20search%20tree%27&Market=%27en-US%27&Adult=%27Moderate%27&$top=50&$format=Atom
 // http://msdn.microsoft.com/en-us/library/dd250846.aspx
 // 9B2B80CDB8B7ED402F4D7D79B8243F25F8A95B2E
