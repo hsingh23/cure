@@ -98,7 +98,6 @@ def get_images_dogpile(search):
 	return urls
 
 def get_web_factbites(search):
-	
 	from urllib import urlencode
 	from bs4 import BeautifulSoup, SoupStrainer
 	import re
@@ -123,7 +122,10 @@ def get_web_factbites(search):
 		except:
 			pass
 	for rel in soup2:
-		related.append(rel.a.get_text())
+		try:
+			related.append(rel.a.get_text())
+		except:
+			pass
 	return {'facts':list(set(factbites)),'related':list(set(related))}
 	# http://www.qwika.com/find/Kd%20tree
 
