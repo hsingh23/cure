@@ -54,7 +54,7 @@ function my_search(search_term){
 function load_initial_data(){
 	// todo: Fixed - find a way to do it automatically
 	//http://jsonpify.heroku.com/?resource=http://statics.site50.net/init.json&callback=?
-	$.getJSON('/static/json/init.json', function(data) {
+	$.getJSON('http://jsonpify.heroku.com/?resource=http://statics.site50.net/json/init.json&callback=?', function(data) {
 		// console.log(data);
 		if (data.initial_search_term){
 			load_results(data.initial_search_term);
