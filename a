@@ -1,0 +1,8 @@
+BEGIN;
+CREATE TABLE "help_app_website" (
+    "id" integer NOT NULL PRIMARY KEY,
+    "url" varchar(1000) NOT NULL,
+    "json_url" varchar(1000) NOT NULL
+)
+;
+COMMIT;

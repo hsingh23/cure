@@ -160,6 +160,15 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.contrib.messages.context_processors.messages',
 )
+CACHE_TIMEOUT = 60*60*24*2
+
+CACHE_BACKEND = 'simple:///?timeout='+str(CACHE_TIMEOUT)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'my_cache',
+    }
+}
 
 # Production Server Settings
 # SURE this should be a seperate file. What about it.
@@ -171,6 +180,19 @@ try:
         STATIC_ROOT = ''
         import dj_database_url
         DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
+        import pylibmc
+        mc = pylibmc.Client(
+            servers=[os.environ.get('MEMCACHIER_SERVERS')],
+            username=os.environ.get('MEMCACHIER_USERNAME'),
+            password=os.environ.get('MEMCACHIER_PASSWORD'),
+            binary=True
+        )
+
+        CACHES = {
+            'default': {
+                'BACKEND': 'django_pylibmc.memcached.PyLibMCCache'
+            }
+        }
 except:
     pass
 
