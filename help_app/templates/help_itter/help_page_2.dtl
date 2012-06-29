@@ -102,13 +102,13 @@
       <a class="carousel-control right" href="#video_flow" data-slide="next">&rsaquo;</a>
     </div>
     <div id="picture_flow" class="carousel slide">
-      <div class="carousel-inner">
-        <div class="item active">
+      <div class="carousel-inner" id="picture_flow_items">
+<!--         <div class="item active">
           <ul class="thumbnails" id="thumbnails_active_items"></ul>
         </div>
         <div class="item">
           <ul class="thumbnails" id="thumbnails_items"></ul>
-        </div>
+        </div> -->
       </div>
       <a class="carousel-control left" href="#picture_flow" data-slide="prev">&lsaquo;</a>
       <a class="carousel-control right" href="#picture_flow" data-slide="next">&rsaquo;</a>
