@@ -98,6 +98,7 @@ def get_images_dogpile(search):
 	return urls
 
 def get_web_factbites(search):
+	
 	from urllib import urlencode
 	from bs4 import BeautifulSoup, SoupStrainer
 	import re
@@ -109,12 +110,18 @@ def get_web_factbites(search):
 	# print BeautifulSoup(Real_opener().open(base+search.replace(' ','+')).read()).prettify()
 	soup = BeautifulSoup(page , parse_only=links)
 	soup2 = BeautifulSoup(page , parse_only=links2)
+	print soup
+	print soup2
+
 	factbites = []
 	related = []
 	for a in soup.find_all('td',valign="top"):
-		temp = a.next_sibling.next_sibling
-		if temp != None:
-			factbites.append(temp.get_text().encode('utf-8').strip())
+		try:
+			temp = a.next_sibling.next_sibling
+			if temp != None:
+				factbites.append(temp.get_text().encode('utf-8').strip())
+		except:
+			pass
 	for rel in soup2:
 		related.append(rel.a.get_text())
 	return {'facts':list(set(factbites)),'related':list(set(related))}
