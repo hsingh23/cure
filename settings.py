@@ -180,19 +180,33 @@ try:
         STATIC_ROOT = ''
         import dj_database_url
         DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
-        import pylibmc
-        mc = pylibmc.Client(
-            servers=[os.environ.get('MEMCACHIER_SERVERS')],
-            username=os.environ.get('MEMCACHIER_USERNAME'),
-            password=os.environ.get('MEMCACHIER_PASSWORD'),
-            binary=True
-        )
+        # import pylibmc
+        # mc = pylibmc.Client(
+        #     servers=[os.environ.get('MEMCACHIER_SERVERS')],
+        #     username=os.environ.get('MEMCACHIER_USERNAME'),
+        #     password=os.environ.get('MEMCACHIER_PASSWORD'),
+        #     binary=True
+        # )
 
-        CACHES = {
-            'default': {
-                'BACKEND': 'django_pylibmc.memcached.PyLibMCCache'
-            }
-        }
+        # CACHES = {
+        #     'default': {
+        #         'BACKEND': 'django_pylibmc.memcached.PyLibMCCache'
+        #     }
+        # }
+        # os.environ['MEMCACHE_SERVERS'] = os.environ.get('MEMCACHIER_SERVERS', '')
+        # os.environ['MEMCACHE_USERNAME'] = os.environ.get('MEMCACHIER_USERNAME', '')
+        # os.environ['MEMCACHE_PASSWORD'] = os.environ.get('MEMCACHIER_PASSWORD', '')
+
+        # CACHES = {
+        #   'default': {
+        #     'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
+        #     'LOCATION': os.environ.get('MEMCACHIER_SERVERS', ''),
+        #     'TIMEOUT': 500,
+        #     'BINARY': True,
+        #   }
+        # }
+        from memcacheify import memcacheify
+        CACHES = memcacheify()
 except:
     pass
 
