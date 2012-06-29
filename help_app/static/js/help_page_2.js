@@ -91,20 +91,23 @@ function load_initial_data(){
 		var items = [];
 		var items_active = [];
 		$.each(data.lightbox_content.initial_images, function(key, val) {
-			items.push('<div class="item" class="center"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="'+key+'" height="500px" width="100%"></a></div>');
-
-			// if (index < 4) {
-			// 	items_active.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
-			// }
-			// else {
-			// 	items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
-			// }
+			//change index to key
+			if (key%4 === 0) {
+				if (key === 0) {
+					items.push('<div class="item active"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
+				}
+				else {
+					items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
+				}
+			}
+			else if (key%4 === 3){
+				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
+			}
+			else {
+				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
+			}
 		});
 		$('#picture_flow_items').prepend(items.join('\n'));
-
-		// $('#thumbnails_items');.append(items.join('\n'));
-		// $('#thumbnails_active_items');.append(items_active.join('\n'));
-
 
 	});
 }
@@ -118,13 +121,10 @@ function load_results(orig_search){
 	search = encodeURIComponent(orig_search);
 	// console.log('called with '+search);
 
-	// var pic_flow = $('#picture_flow_items');
-	var pic_flow_active = $('#thumbnails_active_items');
-	var pic_flow = $('#thumbnails_items');
+	var pic_flow = $('#picture_flow_items');
 	var vid_flow = $('#video_flow_items');
-	pic_flow_active.empty();
-	pic_flow.empty();
 	vid_flow.empty();
+	pic_flow.empty();
 
 	//Get Some info from DuckDuckGo
 	// var duck_duck_go_url = 'http://api.duckduckgo.com/?q='+search+'&format=json&no_redirect=1&callback=?';
@@ -153,27 +153,30 @@ function load_results(orig_search){
 	//#######warning: is depricating and may stop working at any time
 	var google_url = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q='+search+'&safe=active&rsz=8&callback=?';
 	$.getJSON(google_url, function(data) {
-		var items_active = [];
+
 		var items = [];
 		// $.each(data.responseData.results, function(index, val) {
 		// 	var active = (index===1)?' active':'';
 		// 	items.push('<div class="item'+active+'" class="center"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.url+'" alt="'+val.titleNoFormatting+'" height="500px" width="100%"></a><div class="carousel-caption"><h4>'+val.titleNoFormatting+'</h4><p>'+val.contentNoFormatting+'</p></div></div>');
 		// });
 		$.each(data.responseData.results, function(index, val) {
-			if (index < 4) {
-				//var active = (index===0 || 1 || 2 || 3)?' active':'';
-				//items_active.push('<li class="span2"><div class="thumbnail"><div class="item'+active+'" class="center"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="'+val.titleNoFormatting+'" width="100%"></a><div class="carousel-caption"><h4>'+val.titleNoFormatting+'</h4><p>'+val.contentNoFormatting+'</p></div></div></div></li>');
-				items_active.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+			if (index%4 === 0) {
+				if (index === 0) {
+					items.push('<div class="item active"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+				}
+				else {
+					items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+				}
+			}
+			else if (index%4 === 3){
+				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
 			}
 			else {
-				//var active = (index===1)?' active':'';
-				//items.push('<li class="span2"><div class="thumbnail"><div class="item'+active+'" class="center"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="'+val.titleNoFormatting+'" width="100%"></a><div class="carousel-caption"><h4>'+val.titleNoFormatting+'</h4><p>'+val.contentNoFormatting+'</p></div></div></div></li>');
 				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
 			}
 		});
-
 		pic_flow.append(items.join('\n'));
-		pic_flow_active.append(items_active.join('\n'));
+
 	});
 	//Get images from bing
 	//#######warning: is depricated and will stop working August 1 2012
@@ -232,6 +235,9 @@ function load_results(orig_search){
 	//$('#carousel').carousel();
 
 	//make the video flow not slide automatically
+	// $('[id^="video_flow"}').carousel({
+	// 	$('iframe#videos').attr('src','');
+	// });
 	$('[id^="video_flow"]').carousel('pause');
 	$('[id^="picture_flow"]').carousel();
 }
@@ -246,6 +252,10 @@ YUI().use('autocomplete', 'autocomplete-highlighters', function(Y) {
 		source: 'https://en.wikipedia.org/w/api.php?action=opensearch&search={query}&limit=10&namespace=0&format=json&callback={callback}'
 	});
 });
+
+// $('#video_flow a[href="#picture_flow"]').click(function (e){
+// 	$('iframe#videos').attr('src','');
+// });
 
 $('#myTab a[href="#combo"]').click(function (e) {
   e.preventDefault();
