@@ -68,14 +68,6 @@
           <div id="swf"></div>
           <li><a id='cpp' class="various fancybox.iframe" href="http://www.cplusplus.com/reference/">C++ STL</a></li>
           <li><a id='java' class="various fancybox.iframe" href="http://docs.oracle.com/javase/6/docs/api/index.html?overview-summary.html">Java STL</a></li>
-          <li class="nav-header">Views</li>
-          <li class="active"><a href="#">Combo</a></li>
-          <li><a href="#">Youtube</a></li>
-          <li><a href="#">Images</a></li>
-          <li><a href="#">Wolfram</a></li>
-          <li><a href="#">Diagrams</a></li>
-          <li><a href="#">Wikipedia</a></li>
-          <li class="nav-header">Misc</li>
           <li><a href="#">Dinner</a></li>
         </ul>
       </div><!--/.well -->
@@ -115,7 +107,7 @@
     <script src="http://yui.yahooapis.com/3.4.1pr1/build/yui/yui-min.js"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/jquery.mousewheel-3.0.6.pack.js' %}"></script>
-    <script src="{% static 'js/jquery.fancybox.pack.js' %}"></script>    
+    <script src="{% static 'js/jquery.fancybox.pack.js' %}"></script>
     <script src="{% static 'js/help_page.js' %}"></script>
   </body>
 </html>
