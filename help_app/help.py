@@ -49,9 +49,10 @@ def get_web_dogpile(search):
 	import re
 	from urllib import urlencode, unquote
 	from bs4 import BeautifulSoup, SoupStrainer
-	links = SoupStrainer('a','resultTitle')
+	# links = SoupStrainer('a','resultTitle')
+	links = SoupStrainer('div',id='resultsMain')
 	web = 'http://www.dogpile.com/search/web?q='
-	soup = BeautifulSoup(Real_opener().open(web+search).read(), parse_only=links)
+	soup = BeautifulSoup(Real_opener().open(web+search).read(), parse_only=links).find_all('a','resultTitle')
 	urls = []
 	for a in soup:
 		link = unquote(re.search('(?<=ru=)http.+(?=&ld)',a['href']).group())
@@ -67,9 +68,9 @@ def get_pdf_dogpile(search):
 	import re
 	from urllib import urlencode, unquote
 	from bs4 import BeautifulSoup, SoupStrainer
-	links = SoupStrainer('a','resultTitle')
+	links = SoupStrainer('div',id='resultsMain')
 	web = 'http://www.dogpile.com/search/web?q='
-	soup = BeautifulSoup(Real_opener().open(web+search).read(), parse_only=links)
+	soup = BeautifulSoup(Real_opener().open(web+search).read(), parse_only=links).find_all('a','resultTitle')
 	urls = []
 	for a in soup:
 		link = unquote(re.search('(?<=ru=)http.+(?=&ld)',a['href']).group())

@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <title>Help</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <meta name="description" content="A dynamicly generated help-page">
+  <meta name="author" content="Harsh Singh">
 {% load staticfiles %}
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/jquery.fancybox.css' %}" rel="stylesheet">
@@ -66,11 +66,16 @@
         <div id="related_search"></div>
         <li class="nav-header">Animated Content</li>
         <div id="swf"></div>
-        <li><a id='cpp' class="various fancybox.iframe" href="http://www.cplusplus.com/reference/">C++ STL</a></li>
-        <li><a id='java' class="various fancybox.iframe" href="http://docs.oracle.com/javase/6/docs/api/index.html?overview-summary.html">Java STL</a></li>
-        <li><a id='125textbook' class="various fancybox.iframe" href="http://math.hws.edu/javanotes/">CS125 textbook</a></li>
-        <li class="nav-header">Misc</li>
-        <li><a href="#">Dinner</a></li>
+        <ul>
+          <li><a id='cpp' class="various fancybox.iframe" href="http://www.cplusplus.com/reference/">C++ STL</a></li>
+          </ul>
+          <li><a id='python' class="various fancybox.iframe" href="http://docs.python.org/library/">Python STL</a></li>
+          <li><a id='java' class="various fancybox.iframe" href="http://docs.oracle.com/javase/6/docs/api/index.html?overview-summary.html">Java STL</a></li>
+          <li><a id='125textbook' class="various fancybox.iframe" href="http://math.hws.edu/javanotes/">CS125 textbook</a></li>
+
+
+<!--         <li class="nav-header">Misc</li>
+        <li><a href="#">Dinner</a></li> -->
       </ul>
     </div><!--/.well -->
   </div><!--/span-->
@@ -132,14 +137,14 @@
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/jquery.mousewheel-3.0.6.pack.js' %}"></script>
     <script src="{% static 'js/jquery.fancybox.pack.js' %}"></script>
-    
+
     <script src="{% static 'js/help_page_2.js' %}"></script>
     <!-- // <script src="{% static 'js/jquery.lint.js' %}"></script> -->
 
 
     <!-- /Custom Loadfirst JS -->
 
-    <!-- 
+    <!--
       <script src="{% static 'js/jquery.js' %}"></script>
       <script src="{% static 'js/bootstrap-transition.js' %}"></script>
       <script src="{% static 'js/bootstrap-alert.js' %}"></script>
