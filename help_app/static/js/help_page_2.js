@@ -89,7 +89,6 @@ function load_initial_data(){
 		$('#video_flow_items').prepend(videos.join('\n'));
 
 		var items = [];
-		var items_active = [];
 		$.each(data.lightbox_content.initial_images, function(key, val) {
 			//change index to key
 			if (key%4 === 0) {
@@ -100,11 +99,11 @@ function load_initial_data(){
 					items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
 				}
 			}
-			else if (key%4 === 3){
-				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
+			else if (index%4 !== 3){
+				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
 			}
 			else {
-				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
+				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
 			}
 		});
 		$('#picture_flow_items').prepend(items.join('\n'));
@@ -168,11 +167,11 @@ function load_results(orig_search){
 					items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
 				}
 			}
-			else if (index%4 === 3){
-				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
+			else if (index%4 !== 3){
+				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
 			}
 			else {
-				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
 			}
 		});
 		pic_flow.append(items.join('\n'));
@@ -239,7 +238,8 @@ function load_results(orig_search){
 	// 	$('iframe#videos').attr('src','');
 	// });
 	$('[id^="video_flow"]').carousel('pause');
-	$('[id^="picture_flow"]').carousel();
+	//$('[id^="picture_flow"]').carousel();
+	$('#picture_flow').carousel();
 }
 
 YUI().use('autocomplete', 'autocomplete-highlighters', function(Y) {
@@ -302,7 +302,7 @@ $('#myTab a[href="#pdf"]').click(function (e) {
   $('#wiki_text').hide().removeClass("span10").addClass("span3");
 });
 
-$('#myTab a[href="#swf"]').click(function (e) {
+$('#myTab a[href="#SWF"]').click(function (e) {
   e.preventDefault();
   $(this).tab('show');
   $('#video_image_span').show();
