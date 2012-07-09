@@ -139,7 +139,12 @@ function load_results(orig_search){
 		// if (data.query.pages["-1"])
 		$.each(data.query.pages, function(index, val) {
 			heading = '<strong><a class="various fancybox.iframe" href="http://en.wikipedia.org/wiki/'+val.title+'?printable=yes">Wikipedia: '+val.title+'</a></strong>';
-			extract = '<p>'+val.extract+'</p>';
+			if (val.missing === "") {
+				extract = 'Not found on Wikipedia, click on the title above for redirection';
+			}
+			else {
+				extract = '<p>'+val.extract+'</p>';
+			}
 			// console.log(heading, extract);
 		});
 		$('.wiki_title').empty();
