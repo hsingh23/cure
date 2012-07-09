@@ -22,7 +22,7 @@ $(document).ready(function() {
 	});
 	$('#in-field').bind('keypress', function(e) {
 		var code = e.keyCode || e.which;
-		if(code === 13) { 
+		if(code === 13) {
 			load_results($('#in-field').val());
 			disable_input();
 			return false;
@@ -54,7 +54,7 @@ function my_search(search_term){
 function load_initial_data(){
 	// todo: Fixed - find a way to do it automatically
 	//http://jsonpify.heroku.com/?resource=http://statics.site50.net/init.json&callback=?
-	$.getJSON('http://jsonpify.heroku.com/?resource=http://statics.site50.net/json/init.json&callback=?', function(data) {
+	$.getJSON('http://statics.site50.net/json/init.php?callback=?', function(data) {
 		// console.log(data);
 		if (data.initial_search_term){
 			load_results(data.initial_search_term);
@@ -149,7 +149,7 @@ function load_results(orig_search){
 		$('#wiki_extract').append(extract);
 	});
 
-	//Get images from google 
+	//Get images from google
 	//#######warning: is depricating and may stop working at any time
 	var google_url = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q='+search+'&safe=active&rsz=8&callback=?';
 	$.getJSON(google_url, function(data) {
@@ -178,7 +178,7 @@ function load_results(orig_search){
 	//Get images from bing
 	//#######warning: is depricated and will stop working August 1 2012
 	//#######warning: CAN RETURN DANGEROUS CONTENT: Removed for now
-	
+
 	// var bing_url = 'http://api.bing.net/json.aspx?AppId=9B2B80CDB8B7ED402F4D7D79B8243F25F8A95B2E&Query='+search+'&Sources=Image&Version=2.0&Market=en-us&Adult=Moderate&Image.Count=15&Image.Offset=0&JsonType=callback&JsonCallback=?'
 	// $.getJSON(bing_url, function(data) {
 	// 	var items = [];
@@ -194,10 +194,10 @@ function load_results(orig_search){
 	var youtube_url = 'https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&q='+search+'&max-results=5&format=5&safesearch=strict&callback=?';
 	$.getJSON(youtube_url, function(data) {
 		var videos = [];
-		//$('iframe#videos').attr('src',''); 
+		//$('iframe#videos').attr('src','');
 		$.each(data.data.items, function(index, val) {
 			var active = (index===1)?' active':'';
-			videos.push('<div class="item'+active+'"class="center"><iframe class="youtube-player" id="videos" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent" frameborder="0"></iframe></div>');			
+			videos.push('<div class="item'+active+'"class="center"><iframe class="youtube-player" id="videos" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent" frameborder="0"></iframe></div>');
 		});
 		//$("iframe").each(function() {
 		//  this.contentWindow.postMessage('{ "method": "pause" }', "http://www.youtube.com/embed/'+val.id+'?wmode=transparent");
@@ -209,13 +209,13 @@ function load_results(orig_search){
 	// var youtube_url = 'https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&q='+search+'&max-results=5&format=5&safesearch=strict&callback=?';
 	// $.getJSON(youtube_url, function(data) {
 	// 	var videos = [];
-	// 	// $('iframe#yourIframeId').attr('src',''); 
+	// 	// $('iframe#yourIframeId').attr('src','');
 	// 	$.each(data.data.items, function(index, val) {
 	// 		var active = (index===1)?' active':'';
 	// 		// videos.push('<div class="item" class="center"><object width="480" height="385"><param name="movie" value="'+val.player.default+'"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="'+val.player.default+'" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"></embed></object></div>');
 	// 		videos.push('<div class="item'+active+'"class="center"><iframe class="youtube-player" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent" frameborder="0"></iframe></div>');
 	// 		//videos.push('<div class="item"><a id="single_image" href="http://www.youtube.com/embed/'+val.id+'?wmode=transparent"><img src="'+val.thumbnail+'" alt="" height="500px" width="100%"/></a></div>');
-			
+
 	// 	});
 	// 	//$("iframe").each(function() {
 	// 	//  this.contentWindow.postMessage('{ "method": "pause" }', "http://www.youtube.com/embed/'+val.id+'?wmode=transparent");
@@ -223,7 +223,7 @@ function load_results(orig_search){
 	// 	console.log(videos);
 	// 	vid_flow.append(videos.join('\n'));
 	// });
-	
+
 
 	$('img').error(function() {
 		$(this).remove();
@@ -257,7 +257,7 @@ YUI().use('autocomplete', 'autocomplete-highlighters', function(Y) {
 // http://api.search.live.net/json.aspx?AppId=5B0D22D739247C06BE7F990ECBEC1A144F9B7C39&Sources=image&Query=prague&Image.Count=3&Image.Offset=0&Image.Filters=Size:Medium
 
 
-// http://en.wikipedia.org/wiki/Special:Export/LinkedIn 
+// http://en.wikipedia.org/wiki/Special:Export/LinkedIn
 // http://www.mediawiki.org/wiki/API#A_simple_example
 // http://www.mediawiki.org/wiki/API:Query>>>>>>> other
 
@@ -274,7 +274,7 @@ YUI().use('autocomplete', 'autocomplete-highlighters', function(Y) {
 
 //Wolfram
 //APPID(from other people): QKVJ42-7UX5XLE9AT
-//(applied by myself): 
+//(applied by myself):
 //	UQJRUU-XAE263JGR5
 //	UQJRUU-QVWHEHR4J7
 //	UQJRUU-L2QP92GWY9
