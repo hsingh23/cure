@@ -37,6 +37,8 @@ $(document).ready(function() {
 function disable_input(){
 	$('#in-field').attr("disabled", "disabled");
 	setTimeout('$("#in-field").removeAttr("disabled");',2000);
+    setTimeout('$("#in-field").removeAttr("disabled");',2000);
+
 }
 
 function my_search(search_term){
@@ -65,14 +67,14 @@ function load_initial_data(){
 		var suggested_search = [];
 		$.each(data.suggested_search, function(key, val) {
 			// todo # tags
-			suggested_search.push('<ul><a href="#" onclick="my_search(\''+val+'\');">'+val+'</a></ul>');
+			suggested_search.push('<ul><a href="#" class="toggle" onclick="my_search(\''+val+'\');">'+val+'</a></ul>');
 		});
 		$('#suggested_search').append(suggested_search.join('\n'));
 
 		var related_search = [];
 		$.each(data.related_search, function(key, val) {
 			// todo # tags
-			related_search.push('<ul><a href="#" onclick="my_search(\''+val+'\');">'+val+'</a></ul>');
+			related_search.push('<ul><a href="#" class="toggle" onclick="my_search(\''+val+'\');">'+val+'</a></ul>');
 		});
 		$('#related_search').append(related_search.join('\n'));
 
@@ -80,7 +82,7 @@ function load_initial_data(){
 		$.each(data.lightbox_content.initial_swf, function(key, val) {
 			initial_swf.push('<ul><a class="various" href="'+val+'">'+key+'</a></ul>');
 		});
-		$('#swf').append(initial_swf.join('\n'));
+		$('#sidebar-swf').append(initial_swf.join('\n'));
 
 		var videos = [];
 		$.each(data.initial_video_id, function(key, val) {
@@ -109,8 +111,20 @@ function load_initial_data(){
 		$('#picture_flow_items').prepend(items.join('\n'));
 
 	});
+
 }
 
+function load_from_api(search){
+    $.getJSON('/api/'+search+'?callback=?', function(data) {
+        console.log(data.web,data.swf,data.pdf,data.img,data.related,data.facts);
+
+        var pdf = [];
+        $.each(data.pdf, function(key, val) {
+            pdf.push('<ul><a class="various fancybox.iframe" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+val[0]+'</a></ul>');
+        });
+        $('#sidebar-pdf').append(pdf.join('\n'));
+    });
+}
 
 //get them results
 function load_results(orig_search){
@@ -122,8 +136,12 @@ function load_results(orig_search){
 
 	var pic_flow = $('#picture_flow_items');
 	var vid_flow = $('#video_flow_items');
+    var sidebar_pdf = $('#sidebar-pdf');
+    var sidebar_swf = $('#sidebar-swf');
 	vid_flow.empty();
 	pic_flow.empty();
+    sidebar_pdf.empty();
+    sidebar_swf.empty();
 
 	//Get Some info from DuckDuckGo
 	// var duck_duck_go_url = 'http://api.duckduckgo.com/?q='+search+'&format=json&no_redirect=1&callback=?';
@@ -176,6 +194,7 @@ function load_results(orig_search){
 		});
 		pic_flow.append(items.join('\n'));
 
+
 	});
 	//Get images from bing
 	//#######warning: is depricated and will stop working August 1 2012
@@ -225,7 +244,7 @@ function load_results(orig_search){
 	// 	console.log(videos);
 	// 	vid_flow.append(videos.join('\n'));
 	// });
-
+    load_from_api(search);
 
 	$('img').error(function() {
 		$(this).remove();
