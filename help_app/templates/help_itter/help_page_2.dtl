@@ -22,7 +22,16 @@
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 </head>
+
 <body>
+
+  <img src="http://www.ranklogos.com/wp-content/uploads/2012/04/University-of-illinois-at-Urbana-Champaign-Logo.png" width="14.9%">
+  <img src="http://illinois.edu/assets2/images/ilhomemasthead.png" alt="University of Illinois banner" width="684px" height="131px">
+<!-- <div id="header" role="banner" aria-labellegby="branding">
+  <img src="http://illinois.edu/assets2/images/ilhomemasthead.png" alt="University of Illinois banner">
+  <a href="http://illinois.edu" id="branding" style="display:block;"></a>
+</div> -->
+
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container-fluid">

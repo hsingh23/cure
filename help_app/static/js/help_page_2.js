@@ -102,10 +102,10 @@ function load_initial_data(){
 				}
 			}
 			else if (index%4 !== 3){
-				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
 			}
 			else {
-				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
+				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
 			}
 		});
 		$('#picture_flow_items').prepend(items.join('\n'));
@@ -201,17 +201,32 @@ function load_results(orig_search){
 
 
 	});
-	//Get images from bing
-	//#######warning: is depricated and will stop working August 1 2012
-	//#######warning: CAN RETURN DANGEROUS CONTENT: Removed for now
+	// Get images from bing
+	// #######warning: is depricated and will stop working August 1 2012
+	// #######warning: CAN RETURN DANGEROUS CONTENT: Removed for now
 
 	// var bing_url = 'http://api.bing.net/json.aspx?AppId=9B2B80CDB8B7ED402F4D7D79B8243F25F8A95B2E&Query='+search+'&Sources=Image&Version=2.0&Market=en-us&Adult=Moderate&Image.Count=15&Image.Offset=0&JsonType=callback&JsonCallback=?'
 	// $.getJSON(bing_url, function(data) {
 	// 	var items = [];
-	// 	$.each(data.SearchResponse.Image.Results, function(index, val) {
-	// 		items.push('<div class="item" class="center"><img src="'+val.MediaUrl+'" alt="'+val.Title+'" height="500px" width="100%"><div class="carousel-caption"><p>'+val.Title+'</p></div></div>');
+
+	// 	$.each(data.responseData.results, function(index, val) {
+	// 		if (index%4 === 0) {
+	// 			if (index === 0) {
+	// 				items.push('<div class="item active"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.MediaUrl+'" title="'+val.Title+'"><img src="'+val.Thumbnail.Url+'" alt="" height="125px" width="100%"></a></div></li>');
+	// 			}
+	// 			else {
+	// 				items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.MediaUrl+'" title="'+val.Title+'"><img src="'+val.Thumbnail.Url+'" alt="" height="125px" width="100%"></a></div></li>');
+	// 			}
+	// 		}
+	// 		else if (index%4 !== 3){
+	// 			items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.MediaUrl+'" title="'+val.Title+'"><img src="'+val.Thumbnail.Url+'" alt="" height="125px" width="100%"></a></div></li>');
+	// 		}
+	// 		else {
+	// 			items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.MediaUrl+'" title="'+val.Title+'"><img src="'+val.Thumbnail.Url+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
+	// 		}
 	// 	});
-	// 	pic_flow.append(items.join(''));
+	// 	pic_flow.append(items.join('\n'));
+
 	// });
 
 
@@ -257,12 +272,12 @@ function load_results(orig_search){
 
 	//$('#carousel').carousel();
 
-	//make the video flow not slide automatically
 	// $('[id^="video_flow"}').carousel({
 	// 	$('iframe#videos').attr('src','');
 	// });
+
+	//make the video flow not slide automatically
 	$('[id^="video_flow"]').carousel('pause');
-	//$('[id^="picture_flow"]').carousel();
 	$('#picture_flow').carousel();
 }
 
