@@ -116,6 +116,7 @@ function load_from_api(search){
         });
         $('#sidebar-pdf').append(pdf.join('\n'));
         var items = [];
+        console.log(data.facts)
         $.each(data.img, function(index, val) {
         	if (index <= 15) {
 	            if (index%4 === 0) {
