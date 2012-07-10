@@ -32,18 +32,16 @@ $(document).ready(function() {
 	load_initial_data();
 });
 
-
-
 function disable_input(){
 	$('#in-field').attr("disabled", "disabled");
+    $('.toggle').attr("disabled", "disabled");
 	setTimeout('$("#in-field").removeAttr("disabled");',2000);
-    setTimeout('$("#in-field").removeAttr("disabled");',2000);
+    setTimeout('$(".toggle").removeAttr("disabled");',2000);
 
 }
 
 function my_search(search_term){
 	if (search_term[0] === '#'){
-		// We have a hashed value, add original search to the beginning.
 		$('#in-field').val(search_term.replace('#',$.initial_search_term));
 	}
 	else{
@@ -54,10 +52,7 @@ function my_search(search_term){
 }
 
 function load_initial_data(){
-	// todo: Fixed - find a way to do it automatically
-	//http://jsonpify.heroku.com/?resource=http://statics.site50.net/init.json&callback=?
 	$.getJSON('http://statics.site50.net/json/init.php?callback=?', function(data) {
-		// console.log(data);
 		if (data.initial_search_term){
 			load_results(data.initial_search_term);
 			$.initial_search_term = data.initial_search_term;
@@ -66,14 +61,12 @@ function load_initial_data(){
 
 		var suggested_search = [];
 		$.each(data.suggested_search, function(key, val) {
-			// todo # tags
 			suggested_search.push('<ul><a href="#" class="toggle" onclick="my_search(\''+val+'\');">'+val+'</a></ul>');
 		});
-		$('#suggested_search').append(suggested_search.join('\n'));
 
+		$('#suggested_search').append(suggested_search.join('\n'));
 		var related_search = [];
 		$.each(data.related_search, function(key, val) {
-			// todo # tags
 			related_search.push('<ul><a href="#" class="toggle" onclick="my_search(\''+val+'\');">'+val+'</a></ul>');
 		});
 		$('#related_search').append(related_search.join('\n'));
@@ -85,7 +78,7 @@ function load_initial_data(){
 		$('#sidebar-swf').append(initial_swf.join('\n'));
 
 		var videos = [];
-		$.each(data.initial_video_id, function(key, val) {
+		$.each(data.initial_youtube_id, function(key, val) {
 			videos.push('<div class="item"><iframe class="youtube-player" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val+'?wmode=transparent" frameborder="0"></iframe></div>');
 		});
 		$('#video_flow_items').prepend(videos.join('\n'));
@@ -109,31 +102,42 @@ function load_initial_data(){
 			}
 		});
 		$('#picture_flow_items').prepend(items.join('\n'));
-
 	});
-
 }
 
 function load_from_api(search){
     $.getJSON('/api/'+search+'?callback=?', function(data) {
-        console.log(data.web,data.swf,data.pdf,data.img,data.related,data.facts);
-
         var pdf = [];
         $.each(data.pdf, function(key, val) {
             pdf.push('<ul><a class="various fancybox.iframe" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+val[0]+'</a></ul>');
         });
         $('#sidebar-pdf').append(pdf.join('\n'));
+        var items = [];
+        $.each(data.img, function(index, val) {
+            if (index%4 === 0) {
+                if (index === 0) {
+                    items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+                }
+                else {
+                    items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+                }
+            }
+            else if (index%4 !== 3){
+                items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+            }
+            else {
+                items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
+            }
+        });
+        $('#picture_flow_items').append(items.join('\n'));
     });
 }
 
 //get them results
 function load_results(orig_search){
 	var HelpSpace = HelpSpace || {};
-
 	wiki_search = orig_search.replace(/ /g,"_");
 	search = encodeURIComponent(orig_search);
-	// console.log('called with '+search);
-
 	var pic_flow = $('#picture_flow_items');
 	var vid_flow = $('#video_flow_items');
     var sidebar_pdf = $('#sidebar-pdf');
@@ -143,14 +147,7 @@ function load_results(orig_search){
     sidebar_pdf.empty();
     sidebar_swf.empty();
 
-	//Get Some info from DuckDuckGo
-	// var duck_duck_go_url = 'http://api.duckduckgo.com/?q='+search+'&format=json&no_redirect=1&callback=?';
-	// console.log(duck_duck_go_url);
-
-	//wikipedia
-	// /w/api.php?action=query&prop=extracts&format=json&exlimit=10&exintro=&exsectionformat=plain&titles=AVL_tree
 	var wikipedia_url = 'http://www.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&explaintext=&exsectionformat=plain&titles='+wiki_search+'&redirects&callback=?';
-	// console.log(wikipedia_url);
 	$.getJSON(wikipedia_url, function(data) {
 		var heading;
 		var extract;
@@ -171,7 +168,6 @@ function load_results(orig_search){
 		$('.wiki_extract').append(extract);
 	});
 
-	//Get images from google
 	//#######warning: is depricating and may stop working at any time
 	var google_url = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q='+search+'&safe=active&rsz=8&callback=?';
 	$.getJSON(google_url, function(data) {
@@ -198,9 +194,8 @@ function load_results(orig_search){
 			}
 		});
 		pic_flow.append(items.join('\n'));
-
-
 	});
+
 	// Get images from bing
 	// #######warning: is depricated and will stop working August 1 2012
 	// #######warning: CAN RETURN DANGEROUS CONTENT: Removed for now
@@ -231,7 +226,6 @@ function load_results(orig_search){
 
 
 	//Get videos from Youtube
-	//
 	var youtube_url = 'https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&q='+search+'&max-results=5&format=5&safesearch=strict&callback=?';
 	$.getJSON(youtube_url, function(data) {
 		var videos = [];
@@ -247,34 +241,11 @@ function load_results(orig_search){
 		vid_flow.append(videos.join('\n'));
 	});
 
-	// var youtube_url = 'https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&q='+search+'&max-results=5&format=5&safesearch=strict&callback=?';
-	// $.getJSON(youtube_url, function(data) {
-	// 	var videos = [];
-	// 	// $('iframe#yourIframeId').attr('src','');
-	// 	$.each(data.data.items, function(index, val) {
-	// 		var active = (index===1)?' active':'';
-	// 		// videos.push('<div class="item" class="center"><object width="480" height="385"><param name="movie" value="'+val.player.default+'"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="'+val.player.default+'" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"></embed></object></div>');
-	// 		videos.push('<div class="item'+active+'"class="center"><iframe class="youtube-player" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent" frameborder="0"></iframe></div>');
-	// 		//videos.push('<div class="item"><a id="single_image" href="http://www.youtube.com/embed/'+val.id+'?wmode=transparent"><img src="'+val.thumbnail+'" alt="" height="500px" width="100%"/></a></div>');
-
-	// 	});
-	// 	//$("iframe").each(function() {
-	// 	//  this.contentWindow.postMessage('{ "method": "pause" }', "http://www.youtube.com/embed/'+val.id+'?wmode=transparent");
-	// 	//});
-	// 	console.log(videos);
-	// 	vid_flow.append(videos.join('\n'));
-	// });
     load_from_api(search);
 
 	$('img').error(function() {
 		$(this).remove();
 	});
-
-	//$('#carousel').carousel();
-
-	// $('[id^="video_flow"}').carousel({
-	// 	$('iframe#videos').attr('src','');
-	// });
 
 	//make the video flow not slide automatically
 	$('[id^="video_flow"]').carousel('pause');
