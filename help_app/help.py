@@ -38,6 +38,7 @@ def get_results(search):
 	result['img'] = get_images_dogpile(search)
 	result['related'] = temp['related']
 	result['facts'] = temp['facts']
+	result['interview'] = get_web_dogpile(search+"+interview+questions")
 	cache.set(search, dumps(result), CACHE_TIMEOUT)
 	return dumps(result)
 
