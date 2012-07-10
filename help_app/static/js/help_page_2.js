@@ -51,6 +51,8 @@ function my_search(search_term){
 	return false;
 }
 
+var num_images = 0;
+
 function load_initial_data(){
 	$.getJSON('http://statics.site50.net/json/init.php?callback=?', function(data) {
 		if (data.initial_search_term){
@@ -94,12 +96,13 @@ function load_initial_data(){
 					items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
 				}
 			}
-			else if (index%4 !== 3){
-				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+			else if (key%4 !== 3){
+				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
 			}
 			else {
-				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
+				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
 			}
+			// num_images++;
 		});
 		$('#picture_flow_items').prepend(items.join('\n'));
 	});
@@ -129,9 +132,13 @@ function load_from_api(search){
             else {
                 items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
             }
+            num_images++;
         });
         $('#picture_flow_items').append(items.join('\n'));
     });
+
+	$('[id^="video_flow"]').carousel('pause');
+	$('#picture_flow').carousel();
 }
 
 //get them results
@@ -147,6 +154,7 @@ function load_results(orig_search){
 	pic_flow.empty();
     sidebar_pdf.empty();
     sidebar_swf.empty();
+    num_images = 0;
 
 	var wikipedia_url = 'http://www.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&explaintext=&exsectionformat=plain&titles='+wiki_search+'&redirects&callback=?';
 	$.getJSON(wikipedia_url, function(data) {
@@ -155,7 +163,12 @@ function load_results(orig_search){
 		// if (data.query.pages["-1"])
 		$.each(data.query.pages, function(index, val) {
 			heading = '<strong><a class="various fancybox.iframe" href="http://en.wikipedia.org/wiki/'+val.title+'?printable=yes">Wikipedia: '+val.title+'</a></strong>';
-			extract = '<p>'+val.extract+'</p>';
+			if (val.missing === "") {
+				extract = 'Not found on Wikipedia, click on the title above for redirection';
+			}
+			else {
+				extract = '<p>'+val.extract+'</p>';
+			}
 			// console.log(heading, extract);
 		});
 		$('.wiki_title').empty();
@@ -169,10 +182,6 @@ function load_results(orig_search){
 	$.getJSON(google_url, function(data) {
 
 		var items = [];
-		// $.each(data.responseData.results, function(index, val) {
-		// 	var active = (index===1)?' active':'';
-		// 	items.push('<div class="item'+active+'" class="center"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.url+'" alt="'+val.titleNoFormatting+'" height="500px" width="100%"></a><div class="carousel-caption"><h4>'+val.titleNoFormatting+'</h4><p>'+val.contentNoFormatting+'</p></div></div>');
-		// });
 		$.each(data.responseData.results, function(index, val) {
 			if (index%4 === 0) {
 				if (index === 0) {
@@ -188,9 +197,40 @@ function load_results(orig_search){
 			else {
 				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
 			}
+			num_images++;
 		});
 		pic_flow.append(items.join('\n'));
 	});
+
+	// Get images from bing
+	// #######warning: is depricated and will stop working August 1 2012
+	// #######warning: CAN RETURN DANGEROUS CONTENT: Removed for now
+
+	// var bing_url = 'http://api.bing.net/json.aspx?AppId=9B2B80CDB8B7ED402F4D7D79B8243F25F8A95B2E&Query='+search+'&Sources=Image&Version=2.0&Market=en-us&Adult=Moderate&Image.Count=15&Image.Offset=0&JsonType=callback&JsonCallback=?'
+	// $.getJSON(bing_url, function(data) {
+	// 	var items = [];
+
+	// 	$.each(data.responseData.results, function(index, val) {
+	// 		if (index%4 === 0) {
+	// 			if (index === 0) {
+	// 				items.push('<div class="item active"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.MediaUrl+'" title="'+val.Title+'"><img src="'+val.Thumbnail.Url+'" alt="" height="125px" width="100%"></a></div></li>');
+	// 			}
+	// 			else {
+	// 				items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.MediaUrl+'" title="'+val.Title+'"><img src="'+val.Thumbnail.Url+'" alt="" height="125px" width="100%"></a></div></li>');
+	// 			}
+	// 		}
+	// 		else if (index%4 !== 3){
+	// 			items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.MediaUrl+'" title="'+val.Title+'"><img src="'+val.Thumbnail.Url+'" alt="" height="125px" width="100%"></a></div></li>');
+	// 		}
+	// 		else {
+	// 			items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.MediaUrl+'" title="'+val.Title+'"><img src="'+val.Thumbnail.Url+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
+	// 		}
+	// 	});
+	// 	pic_flow.append(items.join('\n'));
+
+	// });
+
+
 	//Get videos from Youtube
 	var youtube_url = 'https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&q='+search+'&max-results=5&format=5&safesearch=strict&callback=?';
 	$.getJSON(youtube_url, function(data) {
@@ -213,6 +253,7 @@ function load_results(orig_search){
 		$(this).remove();
 	});
 
+	//make the video flow not slide automatically
 	$('[id^="video_flow"]').carousel('pause');
 	$('#picture_flow').carousel();
 }
