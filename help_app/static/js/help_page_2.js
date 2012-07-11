@@ -26,12 +26,14 @@ $(document).ready(function() {
 		var code = e.keyCode || e.which;
 		if(code === 13) {
 			num_images = 0;
+			// vid_flow.empty();
+			// pic_flow.empty();
 			load_results($('#in-field').val());
 			disable_input();
 			return false;
 		}
 	});
-	load_initial_data();
+	//load_initial_data();
 });
 
 function disable_input(){
@@ -106,6 +108,9 @@ function load_initial_data(){
 		});
 		$('#picture_flow_items').prepend(items.join('\n'));
 	});
+
+	$('[id^="video_flow"]').carousel('pause');
+	$('#picture_flow').carousel();
 }
 
 function load_from_api(search){
@@ -116,7 +121,7 @@ function load_from_api(search){
         });
         $('#sidebar-pdf').append(pdf.join('\n'));
         var items = [];
-        console.log(data.facts)
+        //console.log(data.facts)
         $.each(data.img, function(index, val) {
         	if (index <= 15) {
 	            if (index%4 === 0) {
