@@ -1,3 +1,5 @@
+var num_images = 0;
+
 //check for enter in input field
 $(document).ready(function() {
     $(".fancybox").fancybox({
@@ -23,12 +25,12 @@ $(document).ready(function() {
 	$('#in-field').bind('keypress', function(e) {
 		var code = e.keyCode || e.which;
 		if(code === 13) {
+			num_images = 0;
 			load_results($('#in-field').val());
 			disable_input();
 			return false;
 		}
 	});
-
 	load_initial_data();
 });
 
@@ -50,8 +52,6 @@ function my_search(search_term){
 	load_results($('#in-field').val());
 	return false;
 }
-
-var num_images = 0;
 
 function load_initial_data(){
 	$.getJSON('http://statics.site50.net/json/init.php?callback=?', function(data) {
@@ -90,7 +90,7 @@ function load_initial_data(){
 			//change index to key
 			if (key%4 === 0) {
 				if (key === 0) {
-					items.push('<div class="item active"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
+					items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
 				}
 				else {
 					items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
@@ -102,7 +102,7 @@ function load_initial_data(){
 			else {
 				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
 			}
-			// num_images++;
+			num_images++;
 		});
 		$('#picture_flow_items').prepend(items.join('\n'));
 	});
@@ -118,20 +118,22 @@ function load_from_api(search){
         var items = [];
         console.log(data.facts)
         $.each(data.img, function(index, val) {
-            if (index%4 === 0) {
-                if (index === 0) {
-                    items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
-                }
-                else {
-                    items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
-                }
-            }
-            else if (index%4 !== 3){
-                items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
-            }
-            else {
-                items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
-            }
+        	if (index <= 15) {
+	            if (index%4 === 0) {
+	                if (index === 0) {
+	                    items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+	                }
+	                else {
+	                    items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+	                }
+	            }
+	            else if (index%4 !== 3){
+	                items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+	            }
+	            else {
+	                items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
+	            }
+	        }
             num_images++;
         });
         $('#picture_flow_items').append(items.join('\n'));
@@ -154,7 +156,6 @@ function load_results(orig_search){
 	pic_flow.empty();
     sidebar_pdf.empty();
     sidebar_swf.empty();
-    num_images = 0;
 
 	var wikipedia_url = 'http://www.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&explaintext=&exsectionformat=plain&titles='+wiki_search+'&redirects&callback=?';
 	$.getJSON(wikipedia_url, function(data) {
