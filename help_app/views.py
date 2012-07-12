@@ -10,6 +10,17 @@ import random
 import logging
 import os
 from help import get_results
+from models import Website
+
+
+def get_initial(search, callback):
+    url = Website.objects.get(key_word=string.translate(search, tab, deletions))
+    return str(callback)+"("+str(url)+");"
+
+def set_initial(search, url):
+    key_word=string.translate(search, tab, deletions)
+    Website.objects.create(key_word=key_word, json_url=url)
+
 
 def help(request):
     return render_to_response("help_itter/help_page_2.dtl")
