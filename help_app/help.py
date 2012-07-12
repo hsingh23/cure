@@ -1,7 +1,9 @@
 from random import choice
 from urllib import FancyURLopener
-from django.core.cache import cache
-
+import string
+tab = string.maketrans(string.ascii_lowercase + string.ascii_uppercase,
+                       string.ascii_lowercase * 2)
+deletions = ''.join(ch for ch in map(chr,range(256)) if ch not in letter_set)
 
 # 5 days
 CACHE_TIMEOUT = 60*60*24*5
@@ -25,6 +27,8 @@ class Fake_opener(FancyURLopener, object):
 def get_results(search):
 	import re
 	from json import dumps
+	from django.core.cache import cache
+
 	search = re.sub(r' +',r'\+',search)
 	search = re.sub(r"\b(?:(?:swf)|(?:pdf)|(?:diagram)|(?:picture)|(?:applet)|(?:doc)|(?:docx)|(?:log)|(?:ppt)|(?:mp3)|(?:wav)|(?:mov))\b","",search)
 	if cache.get(search) != None:
@@ -129,10 +133,13 @@ def get_web_factbites(search):
 		except:
 			pass
 	return {'facts':list(set(factbites)),'related':list(set(related))}
-	# http://www.qwika.com/find/Kd%20tree
+
+# http://www.qwika.com/find/Kd%20tree
 
 def delete_from_cache(search):
 	try:
 		cache.delete(search)
 	except:
 		pass
+
+
