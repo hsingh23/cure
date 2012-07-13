@@ -1,9 +1,5 @@
 from random import choice
 from urllib import FancyURLopener
-import string
-tab = string.maketrans(string.ascii_lowercase + string.ascii_uppercase,
-                       string.ascii_lowercase * 2)
-deletions = ''.join(ch for ch in map(chr,range(256)) if ch not in letter_set)
 
 # 5 days
 CACHE_TIMEOUT = 60*60*24*5
