@@ -5,7 +5,7 @@
   <title>Help</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="A dynamicly generated help-page">
-  <meta name="author" content="Harsh Singh and Alex Zhang">
+  <meta name="author" content="Harsh Singh and Alex Qian Zhang">
   <link rel="shortcut icon"  href="http://statics.site50.net/img/favicon.ico" />
 {% load staticfiles %}
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -92,9 +92,9 @@
       <li class="active"><a href="#combo" data-toggle="tab">Combo</a></li>
       <li><a href="#youtube" data-toggle="tab">Youtube</a></li>
       <li><a href="#images" data-toggle="tab">Images</a></li>
-<!--       <li><a href="#wolfram" data-toggle="tab">Wolfram</a></li>
+<!--       <li><a href="#wolfram" data-toggle="tab">Wolfram</a></li> -->
       <li><a href="#pdf" data-toggle="tab">PDF</a></li>
-      <li><a href="#SWF" data-toggle="tab">SWF</a></li> -->
+<!--       <li><a href="#SWF" data-toggle="tab">SWF</a></li> -->
       <li><a href="#wikipedia" data-toggle="tab">Wikipedia</a></li>
     </ul>
 
@@ -103,7 +103,7 @@
       <div class="tab-pane" id="youtube"></div>
       <div class="tab-pane" id="images"></div>
       <div class="tab-pane" id="wolfram">Wolfram</div>
-      <div class="tab-pane" id="pdf">PDF</div>
+      <div class="tab-pane" id="pdf"></div>
       <div class="tab-pane" id="SWF">SWF</div>
       <div class="tab-pane" id="wikipedia"></div>
     </div>
@@ -114,9 +114,8 @@
       <a class="carousel-control left" href="#video_flow" data-slide="prev">&lsaquo;</a>
       <a class="carousel-control right" href="#video_flow" data-slide="next">&rsaquo;</a>
     </div>
-    <div id="picture_flow" class="carousel slide">
-      <div class="carousel-inner" id="picture_flow_items">
-      </div>
+    <div id="picture_flow" class="carousel">
+      <div class="carousel-inner" id="picture_flow_items"></div>
       <a class="carousel-control left" href="#picture_flow" data-slide="prev">&lsaquo;</a>
       <a class="carousel-control right" href="#picture_flow" data-slide="next">&rsaquo;</a>
     </div>
@@ -135,7 +134,7 @@
     <script src="http://yui.yahooapis.com/3.4.1pr1/build/yui/yui-min.js"></script>
 
     <!-- Custom Loadfirst JS -->
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
     <script src="{% static 'js/jquery.mousewheel-3.0.6.pack.js' %}"></script>
     <script src="{% static 'js/jquery.fancybox.pack.js' %}"></script>
 
