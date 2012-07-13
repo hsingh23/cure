@@ -1,5 +1,3 @@
-var num_images = 0;
-
 //check for enter in input field
 $(document).ready(function() {
     $(".fancybox").fancybox({
@@ -25,13 +23,13 @@ $(document).ready(function() {
 	$('#in-field').bind('keypress', function(e) {
 		var code = e.keyCode || e.which;
 		if(code === 13) {
-			num_images = 0;
 			load_results($('#in-field').val());
 			disable_input();
 			return false;
 		}
 	});
 	load_initial_data();
+
 });
 
 function disable_input(){
@@ -102,21 +100,26 @@ function load_initial_data(){
 			else {
 				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
 			}
-			num_images++;
 		});
 		$('#picture_flow_items').prepend(items.join('\n'));
 	});
+
 }
 
 function load_from_api(search){
     $.getJSON('/api/'+search+'?callback=?', function(data) {
         var pdf = [];
+        var sidebar_pdf = [];
         $.each(data.pdf, function(key, val) {
-            pdf.push('<ul><a class="various fancybox.iframe" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+val[0]+'</a></ul>');
+        	if (key <= 2) {
+            	sidebar_pdf.push('<ul><a class="various fancybox.iframe" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+val[0]+'</a></ul>');
+            }
+            pdf.push('<ul><a class="various fancybox.iframe" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'"><font size="5">'+(key+1)+') '+val[0]+'</font></a></ul>');
         });
-        $('#sidebar-pdf').append(pdf.join('\n'));
+        $('#sidebar-pdf').append(sidebar_pdf.join('\n'));
+        $('#pdf').append(pdf.join('\n'));
         var items = [];
-        console.log(data.facts)
+        //console.log(data.facts)
         $.each(data.img, function(index, val) {
         	if (index <= 15) {
 	            if (index%4 === 0) {
@@ -134,13 +137,9 @@ function load_from_api(search){
 	                items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
 	            }
 	        }
-            num_images++;
         });
         $('#picture_flow_items').append(items.join('\n'));
     });
-
-	$('[id^="video_flow"]').carousel('pause');
-	$('#picture_flow').carousel();
 }
 
 //get them results
@@ -198,7 +197,6 @@ function load_results(orig_search){
 			else {
 				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
 			}
-			num_images++;
 		});
 		pic_flow.append(items.join('\n'));
 	});
@@ -255,9 +253,11 @@ function load_results(orig_search){
 	});
 
 	//make the video flow not slide automatically
-	$('[id^="video_flow"]').carousel('pause');
-	$('#picture_flow').carousel();
+
 }
+
+$('[id^="video_flow"]').carousel('pause');
+$('#picture_flow').carousel();
 
 YUI().use('autocomplete', 'autocomplete-highlighters', function(Y) {
 	Y.one('body').addClass('yui3-skin-sam');
@@ -275,66 +275,66 @@ YUI().use('autocomplete', 'autocomplete-highlighters', function(Y) {
 // });
 
 $('#myTab a[href="#combo"]').click(function (e) {
-  e.preventDefault();
-  $(this).tab('show');
-  $('#video_image_span').show().removeClass("span9").addClass("span7");
-  $('#video_flow').show();
-  $('#picture_flow').show();
-  $('#wiki_text').show().removeClass("span10").addClass("span3");
+	e.preventDefault();
+	$(this).tab('show');
+	$('#video_image_span').show().removeClass("span9").addClass("span7");
+	$('#video_flow').show();
+	$('#picture_flow').show();
+	$('#wiki_text').show().removeClass("span10").addClass("span3");
 });
 
 $('#myTab a[href="#youtube"]').click(function (e) {
-  e.preventDefault();
-  $(this).tab('show');
-  $('#video_image_span').show().removeClass("span7").addClass("span9");
-  $('#video_flow').show();
-  $('#picture_flow').hide();
-  $('#wiki_text').hide().removeClass("span10").addClass("span3");
+	e.preventDefault();
+	$(this).tab('show');
+	$('#video_image_span').show().removeClass("span7").addClass("span9");
+	$('#video_flow').show();
+	$('#picture_flow').hide();
+	$('#wiki_text').hide().removeClass("span10").addClass("span3");
 });
 
 $('#myTab a[href="#images"]').click(function (e) {
-  e.preventDefault();
-  $(this).tab('show');
-  $('#video_image_span').show().removeClass("span7").addClass("span9");
-  $('#video_flow').hide();
-  $('#picture_flow').show();
-  $('#wiki_text').hide().removeClass("span10").addClass("span3");
+	e.preventDefault();
+	$(this).tab('show');
+	$('#video_image_span').show().removeClass("span7").addClass("span9");
+	$('#video_flow').hide();
+	$('#picture_flow').show();
+	$('#wiki_text').hide().removeClass("span10").addClass("span3");
 });
 
 $('#myTab a[href="#wolfram"]').click(function (e) {
-  e.preventDefault();
-  $(this).tab('show');
-  $('#video_image_span').show();
-  $('#video_flow').hide();
-  $('#picture_flow').hide();
-  $('#wiki_text').hide().removeClass("span10").addClass("span3");
+	e.preventDefault();
+	$(this).tab('show');
+	$('#video_image_span').show();
+	$('#video_flow').hide();
+	$('#picture_flow').hide();
+	$('#wiki_text').hide().removeClass("span10").addClass("span3");
 });
 
 $('#myTab a[href="#pdf"]').click(function (e) {
-  e.preventDefault();
-  $(this).tab('show');
-  $('#video_image_span').show();
-  $('#video_flow').hide();
-  $('#picture_flow').hide();
-  $('#wiki_text').hide().removeClass("span10").addClass("span3");
+	e.preventDefault();
+	$(this).tab('show');
+	$('#video_image_span').show();
+	$('#video_flow').hide();
+	$('#picture_flow').hide();
+	$('#wiki_text').hide().removeClass("span10").addClass("span3");
 });
 
 $('#myTab a[href="#SWF"]').click(function (e) {
-  e.preventDefault();
-  $(this).tab('show');
-  $('#video_image_span').show();
-  $('#video_flow').hide();
-  $('#picture_flow').hide();
-  $('#wiki_text').hide().removeClass("span10").addClass("span3");
+	e.preventDefault();
+	$(this).tab('show');
+	$('#video_image_span').show();
+	$('#video_flow').hide();
+	$('#picture_flow').hide();
+	$('#wiki_text').hide().removeClass("span10").addClass("span3");
 });
 
 $('#myTab a[href="#wikipedia"]').click(function (e) {
-  e.preventDefault();
-  $(this).tab('show');
-  $('#video_image_span').hide();
-  $('#video_flow').hide();
-  $('#picture_flow').hide();
-  $('#wiki_text').show().removeClass("span3").addClass("span10");
+	e.preventDefault();
+	$(this).tab('show');
+	$('#video_image_span').hide();
+	$('#video_flow').hide();
+	$('#picture_flow').hide();
+	$('#wiki_text').show().removeClass("span3").addClass("span10");
 });
 // https://api.datamarket.azure.com/Data.ashx/Bing/Search/Image?Query=%27binary%20search%20tree%27&Market=%27en-US%27&Adult=%27Moderate%27&$top=50&$format=Atom
 // http://msdn.microsoft.com/en-us/library/dd250846.aspx
