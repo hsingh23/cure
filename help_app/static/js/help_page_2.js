@@ -151,6 +151,8 @@ function load_results(orig_search){
 	var vid_flow = $('#video_flow_items');
     var sidebar_pdf = $('#sidebar-pdf');
     var sidebar_swf = $('#sidebar-swf');
+    var pdf_items = $('#pdf');
+    pdf_items.empty();
 	vid_flow.empty();
 	pic_flow.empty();
     sidebar_pdf.empty();
