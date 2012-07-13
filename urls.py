@@ -23,6 +23,9 @@ urlpatterns = patterns('help_app.views',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^set-initial-json/$', 'set_initial'),
+    url(r'^get-initial-json/$', 'get_initial'),
+
 )
 
 # urlpatterns += staticfiles_urlpatterns()

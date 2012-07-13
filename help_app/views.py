@@ -10,6 +10,34 @@ import random
 import logging
 import os
 from help import get_results
+from models import Website
+
+import string
+tab = string.maketrans(string.ascii_lowercase + string.ascii_uppercase + string.digits, string.ascii_lowercase * 2 + string.digits)
+letter_set = frozenset(string.ascii_lowercase + string.ascii_uppercase + string.digits)
+deletions = ''.join(ch for ch in map(chr,range(256)) if ch not in letter_set)
+
+def get_initial(request):
+    get = request.GET
+    if get['search']:
+        url = Website.objects.get(key_word=string.translate(search, tab, deletions))
+        if get['callback']:
+            return HttpResponse(str(callback)+"("+str(url)+");")
+        return HttpResponse(str(url))
+
+def set_initial(request):
+    req = request.POST
+    if ("keyword" and 'json') in req:
+        key_word=string.translate(str(req["keyword"]), tab, deletions)
+        try:
+            json.loads(req['json'])
+        except ValueError:
+            return HttpResponse("You need to give some VALID JSON mister")
+        Website.objects.create(key_word=key_word, json=str(req['json']))
+        return HttpResponse(status=200)
+
+    return HttpResponse("Need 'keyword' and 'json' in POST request")
+
 
 def help(request):
     return render_to_response("help_itter/help_page_2.dtl")
