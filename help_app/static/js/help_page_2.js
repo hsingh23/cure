@@ -180,15 +180,10 @@ function load_results(orig_search){
     var vid_flow = $('#video_flow_items');
     var sidebar_pdf = $('#sidebar-pdf');
     var sidebar_swf = $('#sidebar-swf');
-<<<<<<< HEAD
-    vid_flow.empty();
-    pic_flow.empty();
-=======
     var pdf_items = $('#pdf');
     pdf_items.empty();
 	vid_flow.empty();
 	pic_flow.empty();
->>>>>>> cb922c0331c87fdc1bc6d81d92f1f4e97f7a6d83
     sidebar_pdf.empty();
     sidebar_swf.empty();
 
