@@ -63,9 +63,15 @@ function getQueryVariable(variable)
 
 function load_initial_data(){
     var initial = getQueryVariable("q");
-    console.log(initial);
     $.getJSON('get-initial/?search='+initial+'&callback=?', function(data) {
-        parse(data);
+        if (data.type === "url"){
+            $.getJSON(data.url, function(data) {
+                parse(data);
+            });
+        }
+        else {
+            parse2(data);
+        }
     }).error(function() {
         load_results(initial);
         $.initial_search_term = initial;
@@ -86,8 +92,8 @@ function parse(data){
             suggested_search.push('<ul><a href="#" class="toggle" onclick="my_search(\''+val+'\');">'+val+'</a></ul>');
         });
     }
-
     $('#suggested_search').append(suggested_search.join('\n'));
+
     var related_search = [];
     if (data.related_search){
         $.each(data.related_search, function(key, val) {
@@ -99,7 +105,7 @@ function parse(data){
     var initial_swf = [];
     if (data.initial_swf){
         $.each(data.initial_swf, function(key, val) {
-            initial_swf.push('<ul><a class="various" href="'+val+'">'+key+'</a></ul>');
+            initial_swf.push('<ul><a class="various" href="'+val+'">'+(val.substring(val.lastIndexOf("/") + 1))+'</a></ul>');
         });
     }
     $('#sidebar-swf').append(initial_swf.join('\n'));
@@ -232,48 +238,13 @@ function load_results(orig_search){
         pic_flow.append(items.join('\n'));
     });
 
-    // Get images from bing
-    // #######warning: is depricated and will stop working August 1 2012
-    // #######warning: CAN RETURN DANGEROUS CONTENT: Removed for now
-
-    // var bing_url = 'http://api.bing.net/json.aspx?AppId=9B2B80CDB8B7ED402F4D7D79B8243F25F8A95B2E&Query='+search+'&Sources=Image&Version=2.0&Market=en-us&Adult=Moderate&Image.Count=15&Image.Offset=0&JsonType=callback&JsonCallback=?'
-    // $.getJSON(bing_url, function(data) {
-    //  var items = [];
-
-    //  $.each(data.responseData.results, function(index, val) {
-    //      if (index%4 === 0) {
-    //          if (index === 0) {
-    //              items.push('<div class="item active"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.MediaUrl+'" title="'+val.Title+'"><img src="'+val.Thumbnail.Url+'" alt="" height="125px" width="100%"></a></div></li>');
-    //          }
-    //          else {
-    //              items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.MediaUrl+'" title="'+val.Title+'"><img src="'+val.Thumbnail.Url+'" alt="" height="125px" width="100%"></a></div></li>');
-    //          }
-    //      }
-    //      else if (index%4 !== 3){
-    //          items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.MediaUrl+'" title="'+val.Title+'"><img src="'+val.Thumbnail.Url+'" alt="" height="125px" width="100%"></a></div></li>');
-    //      }
-    //      else {
-    //          items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.MediaUrl+'" title="'+val.Title+'"><img src="'+val.Thumbnail.Url+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
-    //      }
-    //  });
-    //  pic_flow.append(items.join('\n'));
-
-    // });
-
-
-    //Get videos from Youtube
-    var youtube_url = 'https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&q='+search+'&max-results=5&format=5&safesearch=strict&callback=?';
+    var youtube_url = 'https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&q='+search+'&max-results=8&format=5&safesearch=strict&callback=?';
     $.getJSON(youtube_url, function(data) {
         var videos = [];
-        //$('iframe#videos').attr('src','');
         $.each(data.data.items, function(index, val) {
             var active = (index===1)?' active':'';
             videos.push('<div class="item'+active+'"class="center"><iframe class="youtube-player" id="videos" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent" frameborder="0"></iframe></div>');
         });
-        //$("iframe").each(function() {
-        //  this.contentWindow.postMessage('{ "method": "pause" }', "http://www.youtube.com/embed/'+val.id+'?wmode=transparent");
-        //});
-        // console.log(videos);
         vid_flow.append(videos.join('\n'));
     });
 
@@ -282,9 +253,6 @@ function load_results(orig_search){
     $('img').error(function() {
         $(this).remove();
     });
-
-    //make the video flow not slide automatically
-
 }
 
 $('[id^="video_flow"]').carousel('pause');
@@ -300,10 +268,6 @@ YUI().use('autocomplete', 'autocomplete-highlighters', function(Y) {
         source: 'https://en.wikipedia.org/w/api.php?action=opensearch&search={query}&limit=10&namespace=0&format=json&callback={callback}'
     });
 });
-
-// $('#video_flow a[href="#picture_flow"]').click(function (e){
-//  $('iframe#videos').attr('src','');
-// });
 
 $('#myTab a[href="#combo"]').click(function (e) {
     e.preventDefault();
@@ -367,53 +331,3 @@ $('#myTab a[href="#wikipedia"]').click(function (e) {
     $('#picture_flow').hide();
     $('#wiki_text').show().removeClass("span3").addClass("span10");
 });
-// https://api.datamarket.azure.com/Data.ashx/Bing/Search/Image?Query=%27binary%20search%20tree%27&Market=%27en-US%27&Adult=%27Moderate%27&$top=50&$format=Atom
-// http://msdn.microsoft.com/en-us/library/dd250846.aspx
-// 9B2B80CDB8B7ED402F4D7D79B8243F25F8A95B2E
-// http://api.search.live.net/json.aspx?AppId=5B0D22D739247C06BE7F990ECBEC1A144F9B7C39
-//     &Sources=image&Query=prague&Image.Count=10
-//     &Image.Offset=0&Image.Filters=Size:Medium
-// http://api.search.live.net/json.aspx?AppId=5B0D22D739247C06BE7F990ECBEC1A144F9B7C39&Sources=image&Query=prague&Image.Count=3&Image.Offset=0&Image.Filters=Size:Medium
-
-
-// http://en.wikipedia.org/wiki/Special:Export/LinkedIn
-// http://www.mediawiki.org/wiki/API#A_simple_example
-// http://www.mediawiki.org/wiki/API:Query>>>>>>> other
-
-//Youtube
-//Developer Key: AI39si5VIAdPPeexdPxRg9SHTOdNrUAvqHmq-GW6KFB26B_YCKSyGvNDdc9nEK8LH-a8NOKnJWbZvdejZlwp8gKgfV2qA078dw
-
-//$('#element').youTubeEmbed('http://www.youtube.com/watch?v=u1zgFlCw8Aw');
-// Or:
-//$('#element').youTubeEmbed({
-//  video           : 'http://www.youtube.com/watch?v=u1zgFlCw8Aw',
-//  width           : 600,      // Height is calculated automatically
-//  progressBar : false     // Hide the progress bar
-//});
-
-//Wolfram
-//APPID(from other people): QKVJ42-7UX5XLE9AT
-//(applied by myself):
-//  UQJRUU-XAE263JGR5
-//  UQJRUU-QVWHEHR4J7
-//  UQJRUU-L2QP92GWY9
-//  UQJRUU-L5A9PJLXEQ
-//  UQJRUU-H95AUX22UX
-//  UQJRUU-5KW92HUQ5K
-//  UQJRUU-RG3T6KHHL4
-//  UQJRUU-ETY9VGVRP3
-//  UQJRUU-RLW7EXRXAP
-//  UQJRUU-HYXPX23J2J
-//var key = Wub_GetVaultValue("wolframalphakey") ? nil;
-//var res = nil;
-//var format = "";
-//if key != nil then
-//   format = "&format=plaintext";
-//   var P = GetURL("http://api.wolframalpha.com/v1/query?input=" + query + "&appid=" + key + format);
-
-//http://api.wolframalpha.com/v2/query?input=pi&appid=XXXX
-//url="http://api.wolframalpha.com/v2/query?input=GF("+str(n)+")&appid="+app+"&format=plaintext&includepodid=AdditionTable&includepodid=MultiplicationTable"
-// http://stackoverflow.com/questions/9745746/twitter-bootstrap-2-carousel-display-a-set-of-thumbnails-at-a-time-like-jcarou
-// http://jsfiddle.net/andresilich/S2rnm/show/
-// http://finnrudolph.de/ImageFlow/Installation
-// https://github.com/reddit/reddit/wiki/API
