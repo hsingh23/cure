@@ -93,13 +93,15 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    # "django.middleware.gzip.GZipMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.http.ConditionalGetMiddleware",
 )
 
 ROOT_URLCONF = 'urls'
@@ -169,6 +171,7 @@ CACHES = {
         'LOCATION': 'my_cache',
     }
 }
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
 # Production Server Settings
 # SURE this should be a seperate file. What about it.

@@ -1,0 +1,8 @@
+TODO:
+    simple password page to access input api
+    reload current data into forms
+    add cache control for authenticated users
+    log changes over time
+    add checks in input forms
+    clean up templates
+    celan up views
