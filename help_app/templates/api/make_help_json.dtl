@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Help API</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Submit Help JSON">
+  <meta name="author" content="Harsh Singh">
+  <link rel="shortcut icon"  href="http://statics.site50.net/img/favicon.ico" />
+{% load staticfiles %}
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px;
+      }
+    </style>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <a class="brand" href="#">Submit Initial Data</a>
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li><a href="/make-help-url/">Url</a></li>
+          <li class="active"><a href="/make-help-json/">JSON</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <form name="submit_json" id="submit_json" action="" method="post" class="form-inline well">{% csrf_token %}
+      <div id="non-lightbox-content">
+        <label>Initial Search Term [Required]</label><br>
+        <div class="control-group required" >
+          <input id="initial_search_term" onkeypress="return event.keyCode!=13" name="keyword" type="text" class="span10 init" placeholder="K-d tree"><br>
+        </div>
+        <label>Initial Wikipedia Pages (URLS)</label><br>
+        <input onkeypress="return event.keyCode!=13" name="initial_wiki_pages" type="text" class="span10 more multi" placeholder="http://en.wikipedia.org/wiki/K-d_tree"><a class="btn btn-success plus" href="#"><i class="icon-plus icon-white"></i></a><br>
+        <label>Suggested Search Terms</label><br>
+        <input onkeypress="return event.keyCode!=13" name="suggested_search" type="text" class="span10 more multi" placeholder="quick select"><a class="btn btn-success plus" href="#"><i class="icon-plus icon-white"></i></a><br>
+        <label>Related Search Terms</label><br>
+        <input onkeypress="return event.keyCode!=13" name="related_search" type="text" class="span10 more multi" placeholder="binary search tree"><a class="btn btn-success plus" href="#"><i class="icon-plus icon-white"></i></a><br>
+        <label>Initial Youtube Video ID's (http://www.youtube.com/watch?v=LdaL-l2S76c turns into LdaL-l2S76c)</label><br>
+        <input onkeypress="return event.keyCode!=13" name="initial_youtube_id" type="text" class="span10 more multi" placeholder="LdaL-l2S76c"><a class="btn btn-success plus" href="#"><i class="icon-plus icon-white"></i></a><br>
+      </div>
+      <div id="lightbox-content">
+<!--         <label>Lecture notes (URLS)</label><br>
+        <input onkeypress="return event.keyCode!=13" name="" type="text" class="span10 more multi" placeholder=""> -->
+        <label>Initial Images (URLS)</label><br>
+        <input onkeypress="return event.keyCode!=13" name="initial_images" type="text" class="span10 more multi" placeholder="http://www-hpcc.astro.washington.edu/faculty/marios/papers/perform/_14500_figure62.gif"><a class="btn btn-success plus" href="#"><i class="icon-plus icon-white"></i></a><br>
+        <label>Initial Flash Content (SWF, URLS)</label><br>
+        <input onkeypress="return event.keyCode!=13" name="initial_swf" type="text" class="span10 more multi" placeholder="http://ma38su.org/swf/kd-tree.swf"><a class="btn btn-success plus" href="#"><i class="icon-plus icon-white"></i></a><br>
+        <label>Initial Sidebar Websites (URLS)</label><br>
+        <input onkeypress="return event.keyCode!=13" name="initial_websites_sidebar_links" type="text" class="span10 more multi" placeholder="https://wiki.engr.illinois.edu/display/cs225fa11/MP+6"><a class="btn btn-success plus" href="#"><i class="icon-plus icon-white"></i></a><br>
+        <label>Initial PDFS (PDF, URLS)</label><br>
+        <input onkeypress="return event.keyCode!=13" name="initial_pdfs" type="text" class="span10 more multi" placeholder="http://www.cs.cmu.edu/~awm/animations/kdtree/kdtree.pdf"><a class="btn btn-success plus" href="#"><i class="icon-plus icon-white"></i></a><br>
+        <label>Initial PowerPoint (PowerPoint, URLS)</label><br>
+        <input onkeypress="return event.keyCode!=13" name="initial_powerpoints" type="text" class="span10 more multi" placeholder="http://www.cs.cmu.edu/~awm/animations/kdtree/count-vor.ppt"><a class="btn btn-success plus" href="#"><i class="icon-plus icon-white"></i></a><br>
+      </div>
+      <br>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div><!--/row-->
+<hr>
+
+
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> -->
+
+    <script type="text/javascript" src="/static/js/jquery.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/help_maker.js"></script>
+  </body>
+</html>

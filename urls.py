@@ -13,6 +13,8 @@ urlpatterns = patterns('help_app.views',
     # url(r'^$', 'help_app.views.home', name='home'),
     # url(r'^help_app/', include('help_app.foo.urls')),
     url(r'^help/$', 'help'),
+    url(r'^auth/$', 'authenticate'),
+
     url(r'^make/$', 'make_help'),
     url(r'^$', 'help'),
     url(r'^help(\d{1,2})/$', 'help_itter'),
@@ -23,9 +25,13 @@ urlpatterns = patterns('help_app.views',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^set-initial-json/$', 'set_initial'),
-    url(r'^get-initial-json/$', 'get_initial'),
+
+    url(r'^get-initial/$', 'get_initial'),
+    url(r'^make-help-json/$', 'make_help_json'),
+    url(r'^make-help-url/$', 'make_help_url'),
+    url(r'^post-submit-json/$', 'post_submit_json'),
+    url(r'^post-submit-url/$', 'post_submit_url'),
+
 
 )
-
 # urlpatterns += staticfiles_urlpatterns()

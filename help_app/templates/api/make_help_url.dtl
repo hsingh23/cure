@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Help API</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A dynamicly generated help-page">
+  <meta name="author" content="Harsh Singh and Alex Qian Zhang">
+  <link rel="shortcut icon"  href="http://statics.site50.net/img/favicon.ico" />
+{% load staticfiles %}
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">Submit Initial Data</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="/make-help-url/">Url</a></li>
+              <li><a href="/make-help-json/">JSON</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <!-- <h1>Submit an Initial Json URL</h1> -->
+      <form name="submit_url" action="/post-submit-url/" method="post" class="form-vertical well">{% csrf_token %}
+        <label>Keyword</label>
+        <input type="text" name="keyword" placeholder="K-d Tree"/>
+        <label>URL</label>
+        <input type="text" name="url" placeholder="Ex: http://statics.site50.net/json/init.json" />
+        <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+  </body>
+</html>
