@@ -60,6 +60,7 @@ def authenticate(request):
 
 
 def post_submit_url(request):
+    # TODO send back a response that loads in view, not just status code
     if request.session.get('cool', False):
         req = request.POST
         if ("keyword" and 'url') in req:
@@ -67,6 +68,11 @@ def post_submit_url(request):
             # Website_URL.objects.create(key_word=key_word, url=str(req['url']))
             cache.delete("db_"+str(keyword)+"_url")
             cache.set("db_"+str(keyword)+"_url", req['url'], 2*365*24*60*60)
+            urllib2.urlopen("http://get-json.herokuapp.com/?resource="+keyword+"&callback=yo&refresh=1")
+            try:
+                json.loads(urllib2.urlopen(url).read())
+            except:
+                return HttpResponse("Something is wrong with your JSON")
             return HttpResponse(status=200)
         return HttpResponse("Something is wrong with your request")
     return HttpResponse(status=403)
@@ -113,21 +119,22 @@ def get_initial(request):
         url = cache.get("db_"+str(keyword)+"_url", 'has expired')
         json_from_cache =  cache.get("db_"+str(keyword)+"_json", 'has expired')
         if url != "has expired":
-            json_from_url = urllib2.urlopen(url).read()
-            try:
-                json.loads(json_from_url)
-                if "callback" in get and is_valid_jsonp_callback_value(str(get['callback'])):
-                    response = HttpResponse(str(get['callback'])+"("+str(json_from_url).encode('utf-8')+");")
-                else:
-                    response = HttpResponse(str(json_from_url).encode('utf-8'))
-                response['Content-Type'] = 'application/json'
-                response['Cache-Control'] = 'public, max-age=432000'
-                response['X-Content-Type-Options']='nosniff'
-                response['X-XSS-Protection']='1; mode=block'
-                return response
-            except:
-                # bad json - don't load from url
-                pass
+            urlp = "http://get-json.herokuapp.com/?resource="+url+"&callback=?"
+            return_json= {}
+            return_json["url"]=urlp
+            return_json["type"]="url"
+            print urlp
+
+            if "callback" in get and is_valid_jsonp_callback_value(str(get['callback'])):
+                response = HttpResponse(str(get['callback'])+"("+json.dumps(return_json)+");")
+            else:
+                response = HttpResponse(str(json_from_url).encode('utf-8'))
+            response['Content-Type'] = 'application/json'
+            response['Cache-Control'] = 'public, max-age=432000'
+            response['X-Content-Type-Options']='nosniff'
+            response['X-XSS-Protection']='1; mode=block'
+            return response
+
 
 
         elif json_from_cache != "has expired":
