@@ -135,8 +135,6 @@ def get_initial(request):
             response['X-XSS-Protection']='1; mode=block'
             return response
 
-
-
         elif json_from_cache != "has expired":
             if "callback" in get and is_valid_jsonp_callback_value(str(get['callback'])):
                 response =  HttpResponse(str(get['callback'])+"("+str(json_from_cache)+");")
@@ -228,7 +226,6 @@ def is_valid_javascript_identifier(identifier, escape=r'\u', ucd_cat=category):
 
 def is_valid_jsonp_callback_value(value):
     """Return whether the given ``value`` can be used as a JSON-P callback."""
-
     for identifier in value.split(u'.'):
         while '[' in identifier:
             if not has_valid_array_index(identifier):
