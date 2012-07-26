@@ -115,7 +115,7 @@ function parse(data){
 
     var initial_swf = [];
     if (data.initial_swf){
-        if (data.initial_swf instanceof Array){
+        if (data.initial_swf && data.initial_swf instanceof Array){
             $.each(data.initial_swf, function(key, val) {
                 initial_swf.push('<ul><a class="various" href="'+val+'">'+(val.substring(val.lastIndexOf("/") + 1))+'</a></ul>');
             });
@@ -169,16 +169,57 @@ function parse(data){
 
 function load_from_api(search){
     $.getJSON('/api/'+search+'?callback=?', function(data) {
+        console.log(data);
+        var facts = [];
+        var factbites = [];
+        if (data.facts && data.facts instanceof Array){
+            $.each(data.facts, function(key, val) {
+                if (key === 1){
+                    facts.push('<div class="item active">'+val+'</div>');
+                    factbites.push('<p>'+val+'</p>');
+                }
+                else{
+                    facts.push('<div class="item">'+val+'</div>');
+                    factbites.push('<p>'+val+'</p>');
+                }
+            });
+        }
+        $('#fact_flow_items').append(facts.join('\n'));
+        $('#factbites').append(factbites.join('\n'));
+
+        var interview = [];
+        var sidebar_interview = [];
+        $.each(data.interview, function(key, val) {
+            if (key <= 2) {
+                sidebar_interview.push('<a class="various fancybox.iframe" href="'+val[1]+'">'+val[0]+'</a><br/>');
+            }
+            interview.push('<a class="various fancybox.iframe" href="'+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
+        });
+        $('#sidebar-interview').append(sidebar_interview.join('\n'));
+        $('#interview').append(interview.join('\n'));
+
         var pdf = [];
         var sidebar_pdf = [];
         $.each(data.pdf, function(key, val) {
             if (key <= 2) {
-                sidebar_pdf.push('<ul><a class="various fancybox.iframe" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+val[0]+'</a></ul>');
+                sidebar_pdf.push('<a class="various fancybox.iframe" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+val[0]+'</a><br/>');
             }
-            pdf.push('<ul><a class="various fancybox.iframe" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'"><font size="5">'+(key+1)+') '+val[0]+'</font></a></ul>');
+            pdf.push('<a class="various fancybox.iframe" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
         });
         $('#sidebar-pdf').append(sidebar_pdf.join('\n'));
         $('#pdf').append(pdf.join('\n'));
+
+        var swf = [];
+        var sidebar_swf = [];
+        $.each(data.swf, function(key, val) {
+            if (key === 0) {
+                sidebar_swf.push('<a class="various fancybox.iframe" href="'+val[1]+'">'+val[0]+'</a><br/>');
+            }
+            swf.push('<a class="various fancybox.iframe" href="'+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
+        });
+        $('#sidebar-swf').append(sidebar_swf.join('\n'));
+        $('#swf').append(swf.join('\n'));
+
         var items = [];
         //console.log(data.facts)
         $.each(data.img, function(index, val) {
@@ -210,14 +251,22 @@ function load_results(orig_search){
     search = encodeURIComponent(orig_search);
     var pic_flow = $('#picture_flow_items');
     var vid_flow = $('#video_flow_items');
-    var sidebar_pdf = $('#sidebar-pdf');
+    var fact_items = $('#fact_flow_items');
     var sidebar_swf = $('#sidebar-swf');
-    var pdf_items = $('#pdf');
-    pdf_items.empty();
+    var swf=$('#swf');
+    var sidebar_pdf = $('#sidebar-pdf');
+    var pdf = $('#pdf');
+    var sidebar_interview = $('#sidebar_interview');
+    var interview = $('#interview');
+    fact_items.empty();
 	vid_flow.empty();
 	pic_flow.empty();
+
     sidebar_pdf.empty();
+    pdf.empty();
+
     sidebar_swf.empty();
+    swf.empty();
 
     var wikipedia_url = 'http://www.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&explaintext=&exsectionformat=plain&titles='+wiki_search+'&redirects&callback=?';
     $.getJSON(wikipedia_url, function(data) {
@@ -282,7 +331,10 @@ function load_results(orig_search){
 }
 
 $('[id^="video_flow"]').carousel('pause');
-$('#picture_flow').carousel();
+// $('#picture_flow').carousel();
+$('#fact_flow').carousel({
+  interval: 10000
+});
 
 YUI().use('autocomplete', 'autocomplete-highlighters', function(Y) {
     Y.one('body').addClass('yui3-skin-sam');
@@ -297,63 +349,81 @@ YUI().use('autocomplete', 'autocomplete-highlighters', function(Y) {
 
 $('#myTab a[href="#combo"]').click(function (e) {
     e.preventDefault();
-    $(this).tab('show');
     $('#video_image_span').show().removeClass("span9").addClass("span7");
     $('#video_flow').show();
     $('#picture_flow').show();
     $('#wiki_text').show().removeClass("span10").addClass("span3");
+    $('#fact_span').show();
+    $('#interview').hide();
+    $('#factbites').hide();
+    $('#wikipedia').hide();
+    $('#swf').hide();
+    $('#pdf').hide();
+    $('#wolfram').hide();
+    $('#youtube').hide();
 });
 
 $('#myTab a[href="#youtube"]').click(function (e) {
     e.preventDefault();
-    $(this).tab('show');
+    disable_all();
     $('#video_image_span').show().removeClass("span7").addClass("span9");
     $('#video_flow').show();
     $('#picture_flow').hide();
-    $('#wiki_text').hide().removeClass("span10").addClass("span3");
 });
 
 $('#myTab a[href="#images"]').click(function (e) {
     e.preventDefault();
-    $(this).tab('show');
-    $('#video_image_span').show().removeClass("span7").addClass("span9");
+    disable_all();
+    $('#video_image_span').show();
     $('#video_flow').hide();
-    $('#picture_flow').show();
-    $('#wiki_text').hide().removeClass("span10").addClass("span3");
+    $('#picture_flow').show().removeClass("span7").addClass("span9");
 });
 
 $('#myTab a[href="#wolfram"]').click(function (e) {
     e.preventDefault();
-    $(this).tab('show');
-    $('#video_image_span').show();
-    $('#video_flow').hide();
-    $('#picture_flow').hide();
-    $('#wiki_text').hide().removeClass("span10").addClass("span3");
+    disable_all();
+    $('#wolfram').show();
 });
 
 $('#myTab a[href="#pdf"]').click(function (e) {
     e.preventDefault();
-    $(this).tab('show');
-    $('#video_image_span').show();
-    $('#video_flow').hide();
-    $('#picture_flow').hide();
-    $('#wiki_text').hide().removeClass("span10").addClass("span3");
+    disable_all();
+    $('#pdf').show();
 });
 
-$('#myTab a[href="#SWF"]').click(function (e) {
+$('#myTab a[href="#swf"]').click(function (e) {
     e.preventDefault();
-    $(this).tab('show');
-    $('#video_image_span').show();
-    $('#video_flow').hide();
-    $('#picture_flow').hide();
-    $('#wiki_text').hide().removeClass("span10").addClass("span3");
+    disable_all();
+    $('#swf').show();
 });
 
 $('#myTab a[href="#wikipedia"]').click(function (e) {
     e.preventDefault();
-    $(this).tab('show');
-    $('#video_image_span').hide();
-    $('#video_flow').hide();
-    $('#picture_flow').hide();
+    disable_all();
     $('#wiki_text').show().removeClass("span3").addClass("span10");
 });
+
+$('#myTab a[href="#factbites"]').click(function (e) {
+    e.preventDefault();
+    disable_all();
+    $('#factbites').show();
+});
+
+$('#myTab a[href="#interview"]').click(function (e) {
+    e.preventDefault();
+    disable_all();
+    $('#interview').show();
+});
+
+function disable_all(){
+    $('#interview').hide();
+    $('#factbites').hide();
+    $('#wikipedia').hide();
+    $('#swf').hide();
+    $('#pdf').hide();
+    $('#wolfram').hide();
+    $('#youtube').hide();
+    $('#video_image_span').hide();
+    $('#fact_span').hide();
+    $('#wiki_text').hide();
+}
