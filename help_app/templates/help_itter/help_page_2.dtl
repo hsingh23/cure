@@ -34,18 +34,18 @@
 
 
       <ul class="nav nav-list">
-        <li><input type="text" class="input-medium search-query" placeholder='Search' id='in-field'></li>
-        <li class="nav-header">Suggested Search</li>
+        <li><input type="text" class="span12 input search-query" placeholder='Search' id='in-field'></li>
+        <li class="nav-header" id="li-suggested">Suggested Search</li>
         <div id="suggested_search"></div>
-        <li class="nav-header">Related Search</li>
+        <li class="nav-header" id="li-related">Related Search</li>
         <div id="related_search"></div>
-        <li class="nav-header">Animated Content</li>
+        <li class="nav-header" id="li-swf">Animated Content</li>
         <div id="sidebar-swf"></div>
-        <li class="nav-header">PDF Content</li>
-        <div id="sidebar-pdf"></div>
-        <li class="nav-header">Interview Content</li>
+        <li class="nav-header" id="li-pdf">PDF Content</li>
+        <div id="sidebar-pdf" ></div>
+        <li class="nav-header" id="li-interview">Interview Content</li>
         <div id="sidebar-interview"></div>
-<!--         <li><a id='125textbook' class="various fancybox.iframe" href="http://math.hws.edu/javanotes/">CS125 textbook</a></li> -->
+
         <li class="nav-header">STLs</li>
         <li><a id='cpp' class="various fancybox.iframe" href="http://www.cplusplus.com/reference/">C++</a></li>
         <li><a id='java' class="various fancybox.iframe" href="http://docs.oracle.com/javase/6/docs/api/index.html?overview-summary.html">Java</a></li>
