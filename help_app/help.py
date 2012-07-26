@@ -74,11 +74,14 @@ def get_pdf_dogpile(search):
 	soup = BeautifulSoup(Real_opener().open(web+search).read(), parse_only=links).find_all('a','resultTitle')
 	urls = []
 	for a in soup:
-		link = unquote(re.search('(?<=ru=)http.+(?=&ld)',a['href']).group())
-		name = a.get_text()
-		# if re.search(r"pdf(\?.*)?$",link) != None:
-		if re.search(r"pdf$",link) != None:
-			urls.append((name, link))
+		try:
+			link = unquote(re.search('(?<=ru=)http.+(?=&ld)',a['href']).group())
+			name = a.get_text()
+			# if re.search(r"pdf(\?.*)?$",link) != None:
+			if re.search(r"pdf$",link) != None:
+				urls.append((name, link))
+		except:
+			pass
 	return urls
 
 def get_images_dogpile(search):
@@ -94,9 +97,12 @@ def get_images_dogpile(search):
 	soup = BeautifulSoup(Real_opener().open(images+search).read(), parse_only=links)
 	urls = []
 	for a in soup:
-		link = unquote(re.search('(?<=ru=)http.+(?=&ld)',a['href']).group())
-		thumb = a.img['src']
-		urls.append((link, thumb))
+		try:
+			link = unquote(re.search('(?<=ru=)http.+(?=&ld)',a['href']).group())
+			thumb = a.img['src']
+			urls.append((link, thumb))
+		except:
+			pass
 	return urls
 
 def get_web_factbites(search):
@@ -107,28 +113,28 @@ def get_web_factbites(search):
 	# links = SoupStrainer('td')
 	links2 = SoupStrainer('div','r')
 	base = 'http://www.factbites.com/topics/'
-	page = Real_opener().open(base+search).read()
-	# print BeautifulSoup(Real_opener().open(base+search.replace(' ','+')).read()).prettify()
-	soup = BeautifulSoup(page , parse_only=links)
-	soup2 = BeautifulSoup(page , parse_only=links2)
-	print soup
-	print soup2
+	url = Real_opener().open(base+search)
+	if url.getcode() == 200:
+		page = url.read()
+		soup = BeautifulSoup(page , parse_only=links)
+		soup2 = BeautifulSoup(page , parse_only=links2)
 
-	factbites = []
-	related = []
-	for a in soup.find_all('td',valign="top"):
-		try:
-			temp = a.next_sibling.next_sibling
-			if temp != None:
-				factbites.append(temp.get_text().encode('utf-8').strip())
-		except:
-			pass
-	for rel in soup2:
-		try:
-			related.append(rel.a.get_text())
-		except:
-			pass
-	return {'facts':list(set(factbites)),'related':list(set(related))}
+		factbites = []
+		related = []
+		for a in soup.find_all('td',valign="top"):
+			try:
+				temp = a.next_sibling.next_sibling
+				if temp != None:
+					factbites.append(temp.get_text().encode('utf-8').strip())
+			except:
+				pass
+		for rel in soup2:
+			try:
+				related.append(rel.a.get_text())
+			except:
+				pass
+		return {'facts':list(set(factbites)),'related':list(set(related))}
+	return {'facts':[], 'related':[]}
 
 # http://www.qwika.com/find/Kd%20tree
 

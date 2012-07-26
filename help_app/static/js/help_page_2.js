@@ -221,7 +221,6 @@ function parse(data){
 }
 
 function load_from_api(search){
-    clear_previous_results();
     $.getJSON('/api/'+search+'?callback=?', function(data) {
         console.log(data);
         var facts = [];
@@ -300,6 +299,7 @@ function load_from_api(search){
 
 //get them results
 function load_results(orig_search){
+    clear_previous_results();
     wiki_search = orig_search.replace(/ /g,"_");
     search = encodeURIComponent(orig_search);
     var wikipedia_url = 'http://www.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&explaintext=&exsectionformat=plain&titles='+wiki_search+'&redirects&callback=?';
