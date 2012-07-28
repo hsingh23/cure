@@ -207,11 +207,11 @@ function parse_initial(data){
     if (data.initial_youtube_id){
         if (data.initial_swf instanceof Array){
             $.each(data.initial_youtube_id, function(key, val) {
-                videos.push('<div class="item"><iframe class="youtube-player" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val+'?wmode=transparent" frameborder="0"></iframe></div>');
+                videos.push('<div class="item"><iframe id="player" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val+'?wmode=transparent&origin=http://cure.herokuapp.com/" frameborder="0"></iframe></div>');
             });
         }
         else{
-            videos.push('<div class="item"><iframe class="youtube-player" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+data.initial_swf+'?wmode=transparent" frameborder="0"></iframe></div>');
+            videos.push('<div class="item"><iframe id="player" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+data.initial_swf+'?wmode=transparent&origin=http://cure.herokuapp.com/" frameborder="0"></iframe></div>');
         }
     }
     HelpSpace.video_flow_items.prepend(videos.join('\n'));
@@ -309,7 +309,7 @@ function load_results(orig_search, options){
             var videos = [];
             $.each(data.data.items, function(index, val) {
                 var active = (index===1)?' active':'';
-                videos.push('<div class="item'+active+'"class="center"><iframe class="youtube-player" id="videos" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent" frameborder="0"></iframe></div>');
+                videos.push('<div class="item'+active+'"class="center"><iframe id="player" id="videos" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent&origin=http://cure.herokuapp.com/" frameborder="0"></iframe></div>');
             });
             HelpSpace.video_flow_items.append(videos.join('\n'));
         });
