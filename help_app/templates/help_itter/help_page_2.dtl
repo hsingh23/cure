@@ -133,7 +133,7 @@
 <script src="{% static 'js/jquery.mousewheel-3.0.6.pack.js' %}"></script>
 <script src="{% static 'js/jquery.fancybox.pack.js' %}"></script>
 
-<script src="{% static 'js/help_page_2.js' %}"></script>
+<script src="{% static 'js/help_page_0001.js' %}"></script>
 <!-- // <script src="{% static 'js/jquery.lint.js' %}"></script> -->
 </body>
 </html>
