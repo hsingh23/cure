@@ -42,6 +42,24 @@ def get_results(search):
 	cache.set(search, dumps(result), CACHE_TIMEOUT)
 	return dumps(result)
 
+# def get_reference_related(search):
+# 	# http://www.reference.com/browse/steric+effect?s=t
+# 	import re
+# 	from urllib import urlencode, unquote
+# 	from bs4 import BeautifulSoup, SoupStrainer
+# 	# links = SoupStrainer('a','resultTitle')
+# 	links = SoupStrainer('a','ey ')
+# 	web = 'http://www.reference.com/browse/'+search+"?s=t"
+# 	soup = BeautifulSoup(Real_opener().open(web).read(), parse_only=links)
+# 	urls = []
+# 	for a in soup:
+# 		link = unquote(re.search(r'(?<=ask.reference.com%2Fweb%3Fq%3D).*(?=%26q)',a['href']).group())
+# 		name = a.get_text()
+# 		urls.append((name, link))
+# 	return urls
+
+
+
 def get_web_dogpile(search):
 	"""
 	Gimmi a search term: "avl tree"
