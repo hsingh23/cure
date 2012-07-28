@@ -1,5 +1,22 @@
 {
-    "initial_search_term":"K-d tree",
+    "initial_search_terms":[
+        "K-d tree"
+    ],
+    "options":[
+        "no_auto_web",
+        "no_auto_related",
+        "no_auto_images",
+        "no_auto_youtube",
+        "no_auto_pdfs",
+        "no_auto_wikipedia",
+        "no_auto_factbites",
+        "no_auto_interview",
+        "auto_api_docs"
+        "auto_swfs",
+    ],
+
+    "class":"cs225",
+
     "initial_wiki_pages": [
         "http://en.wikipedia.org/wiki/K-d_tree",
         "http://en.wikipedia.org/wiki/Quicksort",

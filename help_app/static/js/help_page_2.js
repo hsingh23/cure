@@ -1,8 +1,13 @@
-//check for enter in input field
 var HelpSpace = HelpSpace || {};
-// TODO: Clear factbites on new load. Clear sidebar content on new load. make one new load procedure that calles methods
 function populate_namespace(){
-    // Tabs and Div IDs
+    // Tabs
+    HelpSpace.tab_wikipedia = $('#tab_wikipedia');
+    HelpSpace.tab_factbites = $('#tab_factbites');
+    HelpSpace.tab_interview = $('#tab_interview');
+    HelpSpace.tab_pdf = $('#tab_pdf');
+    HelpSpace.tab_swf = $('#tab_swf');
+
+    // Div IDs
     HelpSpace.interview = $('#interview');
     HelpSpace.factbites = $('#factbites');
     HelpSpace.wikipedia = $('#wikipedia');
@@ -10,18 +15,23 @@ function populate_namespace(){
     HelpSpace.pdf = $('#pdf');
     HelpSpace.wolfram = $('#wolfram');
     HelpSpace.youtube = $('#youtube');
-    HelpSpace.video_image_span =$('#video_image_span');
     HelpSpace.fact_span = $('#fact_span');
     HelpSpace.wiki_text = $('#wiki_text');
     HelpSpace.fact_flow = $('#fact_flow');
     HelpSpace.video_image_span = $('#video_image_span');
     HelpSpace.video_flow = $('#video_flow');
     HelpSpace.picture_flow = $('#picture_flow');
+    HelpSpace.api_docs = $('#api_docs');
+    HelpSpace.suggested_search = $('#suggested_search');
+    HelpSpace.related_search = $('#related_search');
+    HelpSpace.related_swf = $('#related_swf');
+    HelpSpace.related_pdf = $('#related_pdf');
+    HelpSpace.related_interview = $('#related_interview');
 
     // Search and Fields
     HelpSpace.in_field = $('#in-field');
-    HelpSpace.suggested_search = $('#suggested_search');
-    HelpSpace.related_search = $('#related_search');
+    HelpSpace.suggested_search_items = $('#suggested_search_items');
+    HelpSpace.related_search_items = $('#related_search_items');
     // FLOW
     HelpSpace.video_flow_items = $('#video_flow_items');
     HelpSpace.picture_flow_items = $('#picture_flow_items');
@@ -29,7 +39,7 @@ function populate_namespace(){
     // Sidebar
     HelpSpace.sidebar_swf = $('#sidebar-swf');
     HelpSpace.sidebar_pdf = $('#sidebar-pdf');
-    HelpSpace.sidebar_interview = $('#sidebar_interview');
+    HelpSpace.sidebar_interview = $('#sidebar-interview');
     // Wiki
     HelpSpace.wiki_title = $('.wiki_title');
     HelpSpace.wiki_extract = $('.wiki_extract');
@@ -87,7 +97,9 @@ $(document).ready(function() {
 
 function disable_input(){
     HelpSpace.in_field.attr("disabled", "disabled");
-    setTimeout('HelpSpace.in_field.removeAttr("disabled");',2000);
+    HelpSpace.other_searches.hide();
+    setTimeout('HelpSpace.in_field.removeAttr("disabled");',2500);
+    setTimeout('HelpSpace.other_searches.show();',2500);
 }
 
 function my_search(search_term){
@@ -119,65 +131,77 @@ function load_initial_data(){
     $.getJSON('get-initial/?search='+initial+'&callback=?', function(data) {
         if (data.type === "url"){
             $.getJSON(data.url, function(data) {
-                parse(data);
+                parse_initial(data);
             });
         }
         else {
-            console.log(data);
-            parse(data);
+            // Json was made by shitty json maker - need to deprecate that shit and repalce with better model
+            parse_initial(data);
         }
     }).error(function() {
+        // load_result if not init data. Assumes default.
         load_results(initial);
         $.initial_search_term = initial;
         HelpSpace.in_field.val(initial);
+        HelpSpace.suggested_search.hide();
     });
 }
 
-function parse(data){
+function parse_initial(data){
+    // Have to mod load_results, send it options
     if (data.initial_search_term){
-        load_results(data.initial_search_term);
+        if (data.options && data.options instanceof Array){
+            load_results(data.initial_search_term, data.options);
+        }
+        else{
+            load_results(data.initial_search_term)
+        }
         $.initial_search_term = data.initial_search_term;
         HelpSpace.in_field.val(data.initial_search_term);
     }
 
-    var suggested_search = [];
-    if (data.suggested_search){
-        if (data.suggested_search instanceof Array){
-            $.each(data.suggested_search, function(key, val) {
-                suggested_search.push('<ul><a href="#" class="toggle" onclick="my_search(\''+val+'\');">'+val+'</a></ul>');
-            });
-        }
-        else{
-            suggested_search.push('<ul><a href="#" class="toggle" onclick="my_search(\''+data.suggested_search+'\');">'+data.suggested_search+'</a></ul>');
-        }
+    var suggested_search_items = [];
+    HelpSpace.suggested_search.show();
+    if (data.suggested_search && data.suggested_search instanceof Array){
+        $.each(data.suggested_search, function(key, val) {
+            suggested_search_items.push('<a href="#" rel="tooltip" title="'+val+'" onclick="my_search(\''+val+'\');">'+shorten(val)+'</a>');
+        });
     }
-    HelpSpace.suggested_search.append(suggested_search.join('\n'));
+    else if (data.suggested_search){
+        suggested_search_items.push('<a href="#" rel="tooltip" title="'+data.suggested_search+'" onclick="my_search(\''+data.suggested_search+'\');">'+shorten(data.suggested_search)+'</a>');
+    }
+    else{
+        HelpSpace.suggested_search.hide();
+    }
+    HelpSpace.suggested_search_items.append(suggested_search_items.join('\n'));
 
-    var related_search = [];
+    var related_search_items = [];
     if (data.related_search){
         if (data.related_search instanceof Array){
             $.each(data.related_search, function(key, val) {
-                related_search.push('<ul><a href="#" class="toggle" onclick="my_search(\''+val+'\');">'+val+'</a></ul>');
+                related_search_items.push('<a href="#" rel="tooltip" title="'+val+'" onclick="my_search(\''+val+'\');">'+shorten(val)+'</a>');
             });
         }
         else{
-            related_search.push('<ul><a href="#" class="toggle" onclick="my_search(\''+data.related_search+'\');">'+data.related_search+'</a></ul>');
+            related_search_items.push('<a href="#" rel="tooltip" title="'+data.related_search+'" onclick="my_search(\''+data.related_search+'\');">'+shorten(data.related_search)+'</a>');
         }
     }
-    HelpSpace.related_search.append(related_search.join('\n'));
+    HelpSpace.related_search_items.append(related_search_items.join('\n'));
+    HelpSpace.related_search.show();
 
     var initial_swf = [];
     if (data.initial_swf){
         if (data.initial_swf && data.initial_swf instanceof Array){
             $.each(data.initial_swf, function(key, val) {
-                initial_swf.push('<ul><a class="various" href="'+val+'">'+(val.substring(val.lastIndexOf("/") + 1))+'</a></ul>');
+                initial_swf.push('<a class="various"  rel="tooltip" title="'+val+'" href="'+val+'">'+shorten((val.substring(val.lastIndexOf("/") + 1)))+'</a>');
             });
         }
         else{
-            initial_swf.push('<ul><a class="various" href="'+data.initial_swf+'">'+(data.initial_swf.substring(data.initial_swf.lastIndexOf("/") + 1))+'</a></ul>');
+            initial_swf.push('<a class="various"  rel="tooltip" title="'+data.initial_swf+'" href="'+data.initial_swf+'">'+shorten((data.initial_swf.substring(data.initial_swf.lastIndexOf("/") + 1)))+'</a>');
         }
     }
     HelpSpace.sidebar_swf.append(initial_swf.join('\n'));
+    HelpSpace.related_swf.show();
 
     var videos = [];
     if (data.initial_youtube_id){
@@ -191,6 +215,7 @@ function parse(data){
         }
     }
     HelpSpace.video_flow_items.prepend(videos.join('\n'));
+    // Todo: hide video if no video and remove tab
 
     var items = [];
     if (data.initial_images){
@@ -209,7 +234,7 @@ function parse(data){
                     items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
                 }
                 else {
-                    items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
+                    items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li></div>');
                 }
             });
         }
@@ -218,147 +243,252 @@ function parse(data){
         }
     }
     HelpSpace.picture_flow_items.prepend(items.join('\n'));
+    // Todo: hide picture if no video and remove tab
 }
 
-function load_from_api(search){
-    $.getJSON('/api/'+search+'?callback=?', function(data) {
-        console.log(data);
-        var facts = [];
-        var factbites = [];
-        if (data.facts && data.facts instanceof Array){
-            $.each(data.facts, function(key, val) {
-                if (key === 1){
-                    facts.push('<div class="item active">'+val+'</div>');
-                    factbites.push('<p>'+val+'</p>');
-                }
-                else{
-                    facts.push('<div class="item">'+val+'</div>');
-                    factbites.push('<p>'+val+'</p>');
-                }
-            });
-        }
-        HelpSpace.fact_flow_items.append(facts.join('\n'));
-        HelpSpace.factbites.append(factbites.join('\n'));
-
-        var interview = [];
-        var sidebar_interview = [];
-        $.each(data.interview, function(key, val) {
-            if (key <= 2) {
-                sidebar_interview.push('<a class="various fancybox.iframe" href="'+val[1]+'">'+val[0]+'</a><br/>');
-            }
-            interview.push('<a class="various fancybox.iframe" href="'+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
-        });
-        HelpSpace.sidebar_interview.append(sidebar_interview.join('\n'));
-        HelpSpace.interview.append(interview.join('\n'));
-
-        var pdf = [];
-        var sidebar_pdf = [];
-        $.each(data.pdf, function(key, val) {
-            if (key <= 2) {
-                sidebar_pdf.push('<a class="various fancybox.iframe" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+val[0]+'</a><br/>');
-            }
-            pdf.push('<a class="various fancybox.iframe" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
-        });
-        HelpSpace.sidebar_pdf.append(sidebar_pdf.join('\n'));
-        HelpSpace.pdf.append(pdf.join('\n'));
-
-        var swf = [];
-        var sidebar_swf = [];
-        $.each(data.swf, function(key, val) {
-            if (key === 0) {
-                sidebar_swf.push('<a class="various fancybox.iframe" href="'+val[1]+'">'+val[0]+'</a><br/>');
-            }
-            swf.push('<a class="various fancybox.iframe" href="'+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
-        });
-        HelpSpace.sidebar_swf.append(sidebar_swf.join('\n'));
-        HelpSpace.swf.append(swf.join('\n'));
-
-        var items = [];
-        //console.log(data.facts)
-        $.each(data.img, function(index, val) {
-            if (index <= 15) {
-                if (index%4 === 0) {
-                    if (index === 0) {
-                        items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
-                    }
-                    else {
-                        items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
-                    }
-                }
-                else if (index%4 !== 3){
-                    items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
-                }
-                else {
-                    items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
-                }
-            }
-        });
-        HelpSpace.picture_flow_items.append(items.join('\n'));
-    });
+function shorten(val){
+    return (val.length < 29)? val : val.substr(0,23)+"...";
 }
 
-//get them results
-function load_results(orig_search){
+function load_results(orig_search, options){
+    options = options || [];
     clear_previous_results();
     wiki_search = orig_search.replace(/ /g,"_");
     search = encodeURIComponent(orig_search);
-    var wikipedia_url = 'http://www.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&explaintext=&exsectionformat=plain&titles='+wiki_search+'&redirects&callback=?';
-    $.getJSON(wikipedia_url, function(data) {
-        var heading;
-        var extract;
-        // if (data.query.pages["-1"])
-        $.each(data.query.pages, function(index, val) {
-            heading = '<strong><a class="various fancybox.iframe" href="http://en.wikipedia.org/wiki/'+val.title+'?printable=yes">Wikipedia: '+val.title+'</a></strong>';
-            if (val.missing === "") {
-                extract = 'Not found on Wikipedia, click on the title above for redirection';
-            }
-            else {
-                extract = '<p>'+val.extract+'</p>';
-            }
-        });
-        HelpSpace.wiki_title.empty();
-        HelpSpace.wiki_extract.empty();
-        HelpSpace.wiki_title.append(heading);
-        HelpSpace.wiki_extract.append(extract);
-    });
-
-    //#######warning: is depricating and may stop working at any time
-    var google_url = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q='+search+'&safe=active&rsz=8&callback=?';
-    $.getJSON(google_url, function(data) {
-
-        var items = [];
-        $.each(data.responseData.results, function(index, val) {
-            if (index%4 === 0) {
-                if (index === 0) {
-                    items.push('<div class="item active"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+    if (!options.no_auto_wikipedia){
+        var wikipedia_url = 'http://www.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&explaintext=&exsectionformat=plain&titles='+wiki_search+'&redirects&callback=?';
+        $.getJSON(wikipedia_url, function(data) {
+            var heading;
+            var extract;
+            $.each(data.query.pages, function(index, val) {
+                heading = '<strong><a class="various fancybox.iframe" href="http://en.wikipedia.org/wiki/'+val.title+'?printable=yes">Wikipedia: '+val.title+'</a></strong>';
+                if (val.missing === "") {
+                    extract = 'Not found on Wikipedia, click on the title above for redirection';
                 }
                 else {
-                    items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+                    extract = '<p>'+val.extract+'</p>';
                 }
-            }
-            else if (index%4 !== 3){
-                items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
-            }
-            else {
-                items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li></ul></div>');
-            }
+            });
+            HelpSpace.wiki_title.empty();
+            HelpSpace.wiki_extract.empty();
+            HelpSpace.wiki_title.append(heading);
+            HelpSpace.wiki_extract.append(extract);
         });
-        HelpSpace.picture_flow_items.append(items.join('\n'));
-    });
+    }
+    // TODO: show wiki tab and wiki section
 
-    var youtube_url = 'https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&q='+search+'&max-results=8&format=5&safesearch=strict&callback=?';
-    $.getJSON(youtube_url, function(data) {
-        var videos = [];
-        $.each(data.data.items, function(index, val) {
-            var active = (index===1)?' active':'';
-            videos.push('<div class="item'+active+'"class="center"><iframe class="youtube-player" id="videos" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent" frameborder="0"></iframe></div>');
+
+    if (!options.no_auto_images){
+        var google_url = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q='+search+'&safe=active&rsz=8&callback=?';
+        $.getJSON(google_url, function(data) {
+            var items = [];
+            $.each(data.responseData.results, function(index, val) {
+                if (index%4 === 0) {
+                    if (index === 0) {
+                        items.push('<div class="item active"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+                    }
+                    else {
+                        items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+                    }
+                }
+                else if (index%4 !== 3){
+                    items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+                }
+                else {
+                    items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li></div>');
+                }
+            });
+            HelpSpace.picture_flow_items.append(items.join('\n'));
         });
-        HelpSpace.video_flow_items.append(videos.join('\n'));
-    });
-    load_from_api(search);
+    }
+    // TODO: show picture tab and picture section
+
+    if (!options.no_auto_youtube){
+        var youtube_url = 'https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&q='+search+'&max-results=8&format=5&safesearch=strict&callback=?';
+        $.getJSON(youtube_url, function(data) {
+            var videos = [];
+            $.each(data.data.items, function(index, val) {
+                var active = (index===1)?' active':'';
+                videos.push('<div class="item'+active+'"class="center"><iframe class="youtube-player" id="videos" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent" frameborder="0"></iframe></div>');
+            });
+            HelpSpace.video_flow_items.append(videos.join('\n'));
+        });
+    }
+    // TODO: show youtube tab and videosection
+    load_from_api(search, options);
+
+    //Is this the best place to put this?
     $('img').error(function() {
         $(this).remove();
     });
+}
+
+function load_from_api(search, options){
+    if (!options.no_auto_factbites){
+        $.getJSON('http://help-facts.herokuapp.com/'+search+'/?callback=?', function(data) {
+            var facts = [];
+            var factbites = [];
+            if (data.facts && data.facts instanceof Array){
+                $.each(data.facts, function(key, val) {
+                    if (key === 1){
+                        facts.push('<div class="item active">'+val+'</div>');
+                        factbites.push('<p>'+val+'</p>');
+                    }
+                    else{
+                        facts.push('<div class="item">'+val+'</div>');
+                        factbites.push('<p>'+val+'</p>');
+                    }
+                });
+            }
+            HelpSpace.fact_flow_items.append(facts.join('\n'));
+            HelpSpace.factbites.append(factbites.join('\n'));
+            HelpSpace.fact_flow.show();
+            HelpSpace.tab_factbites.show();
+        }).error(function() {
+            HelpSpace.fact_flow.hide();
+            HelpSpace.tab_factbites.hide();
+            console.log("facts callback failed!!!");
+        });
+    }
+    else {
+        HelpSpace.fact_flow.hide();
+        HelpSpace.tab_factbites.hide();
+    }
+
+    if (!options.no_auto_interview){
+        $.getJSON('http://help-interview.herokuapp.com/'+search+'/?callback=?', function(data) {
+            var interview = [];
+            var sidebar_interview = [];
+            $.each(data.interview, function(key, val) {
+                if (key <= 2) {
+                    sidebar_interview.push('<a class="various fancybox.iframe" rel="tooltip" title="'+val[0]+'" href="'+val[1]+'">'+shorten(val[0])+'</a><br/>');
+                }
+                interview.push('<a class="various fancybox.iframe" href="'+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
+            });
+            HelpSpace.sidebar_interview.append(sidebar_interview.join('\n'));
+            HelpSpace.interview.append(interview.join('\n'));
+            HelpSpace.related_interview.show();
+            HelpSpace.tab_interview.show();
+        }).error(function() {
+            HelpSpace.related_interview.hide();
+            HelpSpace.tab_interview.hide();
+            console.log("interview callback failed!!!");
+        });
+    }
+    else {
+        HelpSpace.related_interview.hide();
+        HelpSpace.tab_interview.hide();
+    }
+
+    if (!options.no_auto_pdfs){
+        $.getJSON('http://help-pdf.herokuapp.com/'+search+'/?callback=?', function(data) {
+            var pdf = [];
+            var sidebar_pdf = [];
+            $.each(data.pdf, function(key, val) {
+                if (key <= 2) {
+                    sidebar_pdf.push('<a class="various fancybox.iframe" rel="tooltip" title="'+val[0]+'" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+shorten(val[0])+'</a><br/>');
+                }
+                pdf.push('<a class="various fancybox.iframe" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
+            });
+            HelpSpace.sidebar_pdf.append(sidebar_pdf.join('\n'));
+            HelpSpace.pdf.append(pdf.join('\n'));
+            HelpSpace.tab_pdf.show();
+            HelpSpace.related_pdf.show();
+            // sidebar tab
+
+        }).error(function() {
+            console.log("pdf callback failed!!!");
+            HelpSpace.tab_pdf.hide();
+            HelpSpace.related_pdf.hide();
+        });
+    }
+    else {
+        HelpSpace.tab_pdf.hide();
+        HelpSpace.pdf.hide();
+        HelpSpace.related_pdf.hide();
+    }
+
+    if (!options.no_auto_related){
+        $.getJSON('http://help-related.herokuapp.com/'+search+'/?callback=?', function(data) {
+            var related_search_items = [];
+            $.each(data.related, function(key, val) {
+                if (key <= 3) {
+                    related_search_items.push('<a href="#" rel="tooltip" title="'+val+'" onclick="my_search(\''+val+'\');">'+shorten(val)+'</a>');
+                }
+            });
+            HelpSpace.related_search_items.append(related_search_items.join('\n'));
+            HelpSpace.related_search.show();
+
+        }).error(function() {
+            console.log("realated callback failed!!!");
+            HelpSpace.related_search.hide();
+        });
+    }
+    else {
+        HelpSpace.related_search.hide();
+    }
+
+    if (options.auto_swfs){
+        $.getJSON('http://help-swf.herokuapp.com/'+search+'/?callback=?', function(data) {
+            var swf = [];
+            var sidebar_swf = [];
+            $.each(data.swf, function(key, val) {
+                if (key <= 2) {
+                    sidebar_swf.push('<a class="various fancybox.iframe" rel="tooltip" title="'+val[0]+'" href="'+val[1]+'">'+shorten(val[0])+'</a><br/>');
+                }
+                swf.push('<a class="various fancybox.iframe" href="'+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
+            });
+            HelpSpace.sidebar_swf.append(sidebar_swf.join('\n'));
+            HelpSpace.swf.append(swf.join('\n'));
+            HelpSpace.tab_swf.show();
+            HelpSpace.swf.show();
+            HelpSpace.related_swf.show();
+
+        }).error(function() {
+            console.log("interview callback failed!!!");
+            HelpSpace.tab_swf.hide();
+            HelpSpace.swf.hide();
+            HelpSpace.related_swf.hide();
+        });
+    }
+    else {
+        HelpSpace.tab_swf.hide();
+        HelpSpace.swf.hide();
+        HelpSpace.related_swf.hide();
+    }
+
+    if (!options.no_auto_images){
+        $.getJSON('http://help-img.herokuapp.com/'+search+'/?callback=?', function(data) {
+            var items = [];
+            $.each(data.img, function(index, val) {
+                if (index <= 15) {
+                    if (index%4 === 0) {
+                        if (index === 0) {
+                            items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+                        }
+                        else {
+                            items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+                        }
+                    }
+                    else if (index%4 !== 3){
+                        items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+                    }
+                    else {
+                        items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li></div>');
+                    }
+                }
+            });
+            HelpSpace.picture_flow_items.append(items.join('\n'));
+            HelpSpace.picture_flow.show();
+
+        }).error(function() {
+            console.log("interview callback failed!!!");
+            HelpSpace.picture_flow.hide();
+        });
+    }
+    else {
+        HelpSpace.picture_flow.hide();
+    }
 }
 
 $('[id^="video_flow"]').carousel('pause');
@@ -383,7 +513,7 @@ $('#myTab a[href="#combo"]').click(function (e) {
     HelpSpace.video_image_span.show().removeClass("span9").addClass("span7");
     HelpSpace.video_flow.show();
     HelpSpace.picture_flow.show();
-    HelpSpace.wiki_text.show().removeClass("span10").addClass("span3");
+    HelpSpace.wiki_text.show().removeClass("span9").addClass("span3");
     HelpSpace.fact_span.show();
     HelpSpace.interview.hide();
     HelpSpace.factbites.hide();
@@ -407,7 +537,7 @@ $('#myTab a[href="#images"]').click(function (e) {
     disable_all();
     HelpSpace.video_image_span.show();
     HelpSpace.video_flow.hide();
-    HelpSpace.picture_flow.show().removeClass("span7").addClass("span9");
+    HelpSpace.picture_flow.show();
 });
 
 $('#myTab a[href="#wolfram"]').click(function (e) {
@@ -431,13 +561,13 @@ $('#myTab a[href="#swf"]').click(function (e) {
 $('#myTab a[href="#wikipedia"]').click(function (e) {
     e.preventDefault();
     disable_all();
-    HelpSpace.wiki_text.show().removeClass("span3").addClass("span10");
+    HelpSpace.wiki_text.show().removeClass("span3").addClass("span9");
 });
 
 $('#myTab a[href="#factbites"]').click(function (e) {
     e.preventDefault();
     disable_all();
-    HelpSpace.factbites.show();
+    HelpSpace.factbites.show().addClass("span9");
 });
 
 $('#myTab a[href="#interview"]').click(function (e) {

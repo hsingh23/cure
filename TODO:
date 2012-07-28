@@ -1,8 +1,14 @@
 TODO:
-    simple password page to access input api
-    reload current data into forms
-    add cache control for authenticated users
-    log changes over time
-    add checks in input forms
+    reload current data into forms [new input method]
     clean up templates
-    celan up views
+    clean up views
+    get error message
+Ideas:
+    people suggest pdfs, html5, swf content and for keyword and teacher gets an alert
+Problems:
+    animated content always sucks for cs [1]
+
+Solutions:
+    [1] opt out for auto everything in init. opt in for swf.
+
+Bugs:
