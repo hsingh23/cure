@@ -43,6 +43,9 @@ function populate_namespace(){
     // Wiki
     HelpSpace.wiki_title = $('.wiki_title');
     HelpSpace.wiki_extract = $('.wiki_extract');
+    // Hooks
+    HelpSpace.related_hook = $('#related_hook'); //on sidebar
+
 }
 
 function clear_previous_results(){
@@ -132,7 +135,7 @@ function getQueryVariable(variable)
 
 function load_initial_data(initial){
     $.getJSON('get-initial/?search='+initial+'&callback=?', function(data) {
-        if (data.type === "url"){
+        if (data.type && data.type === "url"){
             $.getJSON(data.url, function(data) {
                 parse_initial(data);
             });
