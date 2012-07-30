@@ -11,12 +11,11 @@
         "no_auto_wikipedia",
         "no_auto_factbites",
         "no_auto_interview",
-        "auto_api_docs"
-        "auto_swfs",
+        "auto_api_docs",
+        "auto_swfs"
     ],
-
+    "subject":"cs",
     "class":"cs225",
-
     "initial_wiki_pages": [
         "http://en.wikipedia.org/wiki/K-d_tree",
         "http://en.wikipedia.org/wiki/Quicksort",
@@ -53,14 +52,10 @@
         "Review":"http://docs.4share.vn/Resources/Flashs/1/15936.swf"
     },
     "initial_websites_sidebar_links": {
-        "":"https://wiki.engr.illinois.edu/display/cs225fa11/MP+6"
+        "MP 6":"https://wiki.engr.illinois.edu/display/cs225fa11/MP+6"
     },
     "initial_pdfs": {
-        "":"http://www.cs.cmu.edu/~awm/animations/kdtree/kdtree.pdf",
-        "":"http://www.cs.cmu.edu/~awm/animations/kdtree/search-simple-small.pdf"
-    },
-    "initial_powerpoints": {
-        "":"http://www.cs.cmu.edu/~awm/animations/kdtree/count-vor.ppt"
+        "Kd tree explained":"http://www.cs.cmu.edu/~awm/animations/kdtree/kdtree.pdf",
+        "Searching K-d_tree":"http://www.cs.cmu.edu/~awm/animations/kdtree/search-simple-small.pdf"
     }
-
 }

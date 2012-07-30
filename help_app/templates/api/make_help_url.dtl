@@ -11,7 +11,7 @@
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <style>
       body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        padding-top: 60px;
       }
     </style>
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
           <div class="nav-collapse">
             <ul class="nav">
               <li class="active"><a href="/make-help-url/">Url</a></li>
-              <li><a href="/make-help-json/">JSON</a></li>
+              <li><a href="/make-help-json-lint/">JSON</a></li>
             </ul>
           </div>
         </div>
@@ -46,7 +46,7 @@
         <label>Keyword</label>
         <input type="text" name="keyword" placeholder="K-d Tree"/>
         <label>URL</label>
-        <input type="text" name="url" placeholder="Ex: http://statics.site50.net/json/init.json" />
+        <input type="text" name="url" placeholder="http://statics.site50.net/json/init_0001.json" />
         <br>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>

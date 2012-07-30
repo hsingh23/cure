@@ -13,7 +13,7 @@
   <style type="text/css">
     body {
       padding-top: 20px;
-      padding-bottom: 10px;
+      padding-bottom: 1000px;
     }
     .sidebar-nav {
       padding: 9px 0;
@@ -43,6 +43,7 @@
           <li class="nav-header" id="li-related">Related Search</li>
           <div id="related_search_items"></div>
         </div>
+        <div id="related_hook"></div>
         <div id="related_swf">
           <li class="nav-header" id="li-swf">Animated Content</li>
           <div id="sidebar-swf"></div>

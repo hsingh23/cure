@@ -28,6 +28,8 @@ urlpatterns = patterns('help_app.views',
 
     url(r'^get-initial/$', 'get_initial'),
     url(r'^make-help-json/$', 'make_help_json'),
+    url(r'^make-help-json-lint/$', 'make_help_json_lint'),
+
     url(r'^make-help-url/$', 'make_help_url'),
     url(r'^post-submit-json/$', 'post_submit_json'),
     url(r'^post-submit-url/$', 'post_submit_url'),
