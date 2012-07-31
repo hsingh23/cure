@@ -267,7 +267,7 @@ Help API Explained:
         }).fail(function(){$('#submit').hide(); load_sample();}).done(function(){$("#validate").click(); $('#submit').hide();});
     }
     function load_sample(){
-        $.getJSON('http://get-json.herokuapp.com/?resource=http://statics.site50.net/json/sample_0001.json&callback=?', function(data) {
+        $.getJSON('http://get-json.herokuapp.com/?resource=http://statics.site50.net/json/sample_0003.json&callback=?', function(data) {
             $('#json_input').val(JSON.stringify(data));
         }).done(function(){$("#validate").click();});
     }
