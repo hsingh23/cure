@@ -1,300 +1,647 @@
-//check for enter in input field
-$(document).ready(function() {
-    $(".fancybox").fancybox({
-    	openEffect : 'none',
-    	closeEffect	: 'none',
-    	helpers : {
-    		title : {
-    			type : 'outside'
-    		}
-    	}
-    });
-	$(".various").fancybox({
-		// maxWidth	: 800,
-		// maxHeight	: 600,
-		fitToView	: false,
-		width		: '90%',
-		height		: '90%',
-		autoSize	: false,
-		closeClick	: false,
-		openEffect	: 'none',
-		closeEffect	: 'none'
-	});
-	$('#in-field').bind('keypress', function(e) {
-		var code = e.keyCode || e.which;
-		if(code === 13) {
-			load_results($('#in-field').val());
-			disable_input();
-			return false;
-		}
-	});
+var HelpSpace = HelpSpace || {};
+function populate_namespace(){
+    // Tabs
+    HelpSpace.tab_wikipedia = $('#tab_wikipedia');
+    HelpSpace.tab_factbites = $('#tab_factbites');
+    HelpSpace.tab_interview = $('#tab_interview');
+    HelpSpace.tab_pdf = $('#tab_pdf');
+    HelpSpace.tab_swf = $('#tab_swf');
 
-	load_initial_data();
+    // Div IDs
+    HelpSpace.interview = $('#interview');
+    HelpSpace.factbites = $('#factbites');
+    HelpSpace.wikipedia = $('#wikipedia');
+    HelpSpace.swf = $('#swf');
+    HelpSpace.pdf = $('#pdf');
+    HelpSpace.wolfram = $('#wolfram');
+    HelpSpace.youtube = $('#youtube');
+    HelpSpace.fact_span = $('#fact_span');
+    HelpSpace.wiki_text = $('#wiki_text');
+    HelpSpace.fact_flow = $('#fact_flow');
+    HelpSpace.video_image_span = $('#video_image_span');
+    HelpSpace.video_flow = $('#video_flow');
+    HelpSpace.picture_flow = $('#picture_flow');
+    HelpSpace.api_docs = $('#api_docs');
+    HelpSpace.suggested_search = $('#suggested_search');
+    HelpSpace.related_search = $('#related_search');
+    HelpSpace.related_swf = $('#related_swf');
+    HelpSpace.related_pdf = $('#related_pdf');
+    HelpSpace.related_interview = $('#related_interview');
+
+    // Search and Fields
+    HelpSpace.in_field = $('#in-field');
+    HelpSpace.suggested_search_items = $('#suggested_search_items');
+    HelpSpace.related_search_items = $('#related_search_items');
+    // FLOW
+    HelpSpace.video_flow_items = $('#video_flow_items');
+    HelpSpace.picture_flow_items = $('#picture_flow_items');
+    HelpSpace.fact_flow_items = $('#fact_flow_items');
+    // Sidebar
+    HelpSpace.sidebar_swf = $('#sidebar-swf');
+    HelpSpace.sidebar_pdf = $('#sidebar-pdf');
+    HelpSpace.sidebar_interview = $('#sidebar-interview');
+    // Wiki
+    HelpSpace.wiki_title = $('.wiki_title');
+    HelpSpace.wiki_extract = $('.wiki_extract');
+    // Hooks
+    HelpSpace.related_hook = $('#related_hook'); //on sidebar
+
+}
+
+function clear_previous_results(){
+    // Tabs
+    HelpSpace.pdf.empty();
+    HelpSpace.interview.empty();
+    HelpSpace.swf.empty();
+    HelpSpace.factbites.empty();
+    // Sidebar
+    HelpSpace.sidebar_swf.empty();
+    HelpSpace.sidebar_pdf.empty();
+    HelpSpace.sidebar_interview.empty();
+    HelpSpace.related_search_items.empty();
+    HelpSpace.suggested_search_items.empty();
+    HelpSpace.related_hook.empty();
+    // Flows
+    HelpSpace.fact_flow_items.empty();
+    HelpSpace.picture_flow_items.empty();
+    HelpSpace.video_flow_items.empty();
+}
+
+
+$(document).ready(function() {
+    populate_namespace();
+    $(".fancybox").fancybox({
+        openEffect : 'none',
+        closeEffect : 'none',
+        helpers : {
+            title : {
+                type : 'outside'
+            }
+        }
+    });
+    $(".various").fancybox({
+        // maxWidth : 800,
+        // maxHeight    : 600,
+        fitToView   : false,
+        width       : '90%',
+        height      : '90%',
+        autoSize    : false,
+        closeClick  : false,
+        openEffect  : 'none',
+        closeEffect : 'none'
+    });
+    HelpSpace.api_docs.hide();
+    HelpSpace.in_field.bind('keypress', function(e) {
+        var code = e.keyCode || e.which;
+        if(code === 13) {
+            disable_input();
+            load_initial_data(HelpSpace.in_field.val());
+            return false;
+        }
+    });
+    load_initial_data(getQueryVariable("q"));
 });
 
-
-
 function disable_input(){
-	$('#in-field').attr("disabled", "disabled");
-	setTimeout('$("#in-field").removeAttr("disabled");',2000);
+    HelpSpace.in_field.attr("disabled", "disabled");
+    HelpSpace.related_search.hide();
+    HelpSpace.suggested_search.hide();
+    HelpSpace.related_hook.hide();
+    setTimeout('HelpSpace.in_field.removeAttr("disabled");',2500);
+    setTimeout('HelpSpace.related_search.show();',2500);
+    setTimeout('HelpSpace.suggested_search.show();',2500);
 }
 
 function my_search(search_term){
-	if (search_term[0] === '#'){
-		// We have a hashed value, add original search to the beginning.
-		$('#in-field').val(search_term.replace('#',$.initial_search_term));
-	}
-	else{
-		$('#in-field').val(search_term)
-	}
-	load_results($('#in-field').val());
-	return false;
+    if (search_term[0] === '#'){
+        HelpSpace.in_field.val(search_term.replace('#',$.initial_search_term));
+    }
+    else{
+        HelpSpace.in_field.val(search_term)
+    }
+    load_initial_data(HelpSpace.in_field.val());
+    return false;
 }
 
-function load_initial_data(){
-	// todo: Fixed - find a way to do it automatically
-	//http://jsonpify.heroku.com/?resource=http://statics.site50.net/init.json&callback=?
-	$.getJSON('http://statics.site50.net/json/init.php?callback=?', function(data) {
-		// console.log(data);
-		if (data.initial_search_term){
-			load_results(data.initial_search_term);
-			$.initial_search_term = data.initial_search_term;
-			$('#in-field').val(data.initial_search_term);
-		}
-
-		var suggested_search = [];
-		$.each(data.suggested_search, function(key, val) {
-			// todo # tags
-			suggested_search.push('<ul><a href="#" onclick="my_search(\''+val+'\');">'+val+'</a></ul>');
-		});
-		$('#suggested_search').append(suggested_search.join('\n'));
-
-		var related_search = [];
-		$.each(data.related_search, function(key, val) {
-			// todo # tags
-			related_search.push('<ul><a href="#" onclick="my_search(\''+val+'\');">'+val+'</a></ul>');
-		});
-		$('#related_search').append(related_search.join('\n'));
-
-		var initial_swf = [];
-		$.each(data.lightbox_content.initial_swf, function(key, val) {
-			initial_swf.push('<ul><a class="various" href="'+val+'">'+key+'</a></ul>');
-		});
-		$('#swf').append(initial_swf.join('\n'));
-
-		var videos = [];
-		$.each(data.initial_video_id, function(key, val) {
-			videos.push('<div class="item"><iframe class="youtube-player" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val+'?wmode=transparent" frameborder="0"></iframe></div>');
-		});
-		$('#video_flow_items').prepend(videos.join('\n'));
-
-		var items = [];
-		var items_active = [];
-		$.each(data.lightbox_content.initial_images, function(key, val) {
-			items.push('<div class="item" class="center"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="'+key+'" height="500px" width="100%"></a></div>');
-
-			// if (index < 4) {
-			// 	items_active.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
-			// }
-			// else {
-			// 	items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
-			// }
-		});
-		$('#picture_flow_items').prepend(items.join('\n'));
-
-		// $('#thumbnails_items');.append(items.join('\n'));
-		// $('#thumbnails_active_items');.append(items_active.join('\n'));
-
-
-	});
+function getQueryVariable(variable)
+{
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i=0;i<vars.length;i++){
+        var pair = vars[i].split("=");
+        if (pair[0] == variable){
+            return pair[1];
+        }
+    }
+    return "Computer science";
 }
 
-
-//get them results
-function load_results(orig_search){
-	var HelpSpace = HelpSpace || {};
-
-	wiki_search = orig_search.replace(/ /g,"_");
-	search = encodeURIComponent(orig_search);
-	// console.log('called with '+search);
-
-	// var pic_flow = $('#picture_flow_items');
-	var pic_flow_active = $('#thumbnails_active_items');
-	var pic_flow = $('#thumbnails_items');
-	var vid_flow = $('#video_flow_items');
-	pic_flow_active.empty();
-	pic_flow.empty();
-	vid_flow.empty();
-
-	//Get Some info from DuckDuckGo
-	// var duck_duck_go_url = 'http://api.duckduckgo.com/?q='+search+'&format=json&no_redirect=1&callback=?';
-	// console.log(duck_duck_go_url);
-
-	//wikipedia
-	// /w/api.php?action=query&prop=extracts&format=json&exlimit=10&exintro=&exsectionformat=plain&titles=AVL_tree
-	var wikipedia_url = 'http://www.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&explaintext=&exsectionformat=plain&titles='+wiki_search+'&redirects&callback=?';
-	// console.log(wikipedia_url);
-	$.getJSON(wikipedia_url, function(data) {
-		var heading;
-		var extract;
-		// if (data.query.pages["-1"])
-		$.each(data.query.pages, function(index, val) {
-			heading = '<strong><a class="various fancybox.iframe" href="http://en.wikipedia.org/wiki/'+val.title+'?printable=yes">Wikipedia: '+val.title+'</a></strong>';
-			extract = '<p>'+val.extract+'</p>';
-			// console.log(heading, extract);
-		});
-		$('#wiki_title').empty();
-		$('#wiki_extract').empty();
-		$('#wiki_title').append(heading);
-		$('#wiki_extract').append(extract);
-	});
-
-	//Get images from google
-	//#######warning: is depricating and may stop working at any time
-	var google_url = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q='+search+'&safe=active&rsz=8&callback=?';
-	$.getJSON(google_url, function(data) {
-		var items_active = [];
-		var items = [];
-		// $.each(data.responseData.results, function(index, val) {
-		// 	var active = (index===1)?' active':'';
-		// 	items.push('<div class="item'+active+'" class="center"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.url+'" alt="'+val.titleNoFormatting+'" height="500px" width="100%"></a><div class="carousel-caption"><h4>'+val.titleNoFormatting+'</h4><p>'+val.contentNoFormatting+'</p></div></div>');
-		// });
-		$.each(data.responseData.results, function(index, val) {
-			if (index < 4) {
-				//var active = (index===0 || 1 || 2 || 3)?' active':'';
-				//items_active.push('<li class="span2"><div class="thumbnail"><div class="item'+active+'" class="center"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="'+val.titleNoFormatting+'" width="100%"></a><div class="carousel-caption"><h4>'+val.titleNoFormatting+'</h4><p>'+val.contentNoFormatting+'</p></div></div></div></li>');
-				items_active.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" width="100%"></a></div></li>');
-			}
-			else {
-				//var active = (index===1)?' active':'';
-				//items.push('<li class="span2"><div class="thumbnail"><div class="item'+active+'" class="center"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="'+val.titleNoFormatting+'" width="100%"></a><div class="carousel-caption"><h4>'+val.titleNoFormatting+'</h4><p>'+val.contentNoFormatting+'</p></div></div></div></li>');
-				items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" width="100%"></a></div></li>');
-			}
-		});
-		pic_flow.append(items.join('\n'));
-		pic_flow_active.append(items_active.join('\n'));
-
-	});
-	//Get images from bing
-	//#######warning: is depricated and will stop working August 1 2012
-	//#######warning: CAN RETURN DANGEROUS CONTENT: Removed for now
-
-	// var bing_url = 'http://api.bing.net/json.aspx?AppId=9B2B80CDB8B7ED402F4D7D79B8243F25F8A95B2E&Query='+search+'&Sources=Image&Version=2.0&Market=en-us&Adult=Moderate&Image.Count=15&Image.Offset=0&JsonType=callback&JsonCallback=?'
-	// $.getJSON(bing_url, function(data) {
-	// 	var items = [];
-	// 	$.each(data.SearchResponse.Image.Results, function(index, val) {
-	// 		items.push('<div class="item" class="center"><img src="'+val.MediaUrl+'" alt="'+val.Title+'" height="500px" width="100%"><div class="carousel-caption"><p>'+val.Title+'</p></div></div>');
-	// 	});
-	// 	pic_flow.append(items.join(''));
-	// });
-
-
-	//Get videos from Youtube
-	//
-	var youtube_url = 'https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&q='+search+'&max-results=5&format=5&safesearch=strict&callback=?';
-	$.getJSON(youtube_url, function(data) {
-		var videos = [];
-		//$('iframe#videos').attr('src','');
-		$.each(data.data.items, function(index, val) {
-			var active = (index===1)?' active':'';
-			videos.push('<div class="item'+active+'"class="center"><iframe class="youtube-player" id="videos" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent" frameborder="0"></iframe></div>');
-		});
-		//$("iframe").each(function() {
-		//  this.contentWindow.postMessage('{ "method": "pause" }', "http://www.youtube.com/embed/'+val.id+'?wmode=transparent");
-		//});
-		// console.log(videos);
-		vid_flow.append(videos.join('\n'));
-	});
-
-	// var youtube_url = 'https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&q='+search+'&max-results=5&format=5&safesearch=strict&callback=?';
-	// $.getJSON(youtube_url, function(data) {
-	// 	var videos = [];
-	// 	// $('iframe#yourIframeId').attr('src','');
-	// 	$.each(data.data.items, function(index, val) {
-	// 		var active = (index===1)?' active':'';
-	// 		// videos.push('<div class="item" class="center"><object width="480" height="385"><param name="movie" value="'+val.player.default+'"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="'+val.player.default+'" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"></embed></object></div>');
-	// 		videos.push('<div class="item'+active+'"class="center"><iframe class="youtube-player" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent" frameborder="0"></iframe></div>');
-	// 		//videos.push('<div class="item"><a id="single_image" href="http://www.youtube.com/embed/'+val.id+'?wmode=transparent"><img src="'+val.thumbnail+'" alt="" height="500px" width="100%"/></a></div>');
-
-	// 	});
-	// 	//$("iframe").each(function() {
-	// 	//  this.contentWindow.postMessage('{ "method": "pause" }', "http://www.youtube.com/embed/'+val.id+'?wmode=transparent");
-	// 	//});
-	// 	console.log(videos);
-	// 	vid_flow.append(videos.join('\n'));
-	// });
-
-
-	$('img').error(function() {
-		$(this).remove();
-	});
-
-	//$('#carousel').carousel();
-
-	//make the video flow not slide automatically
-	$('[id^="video_flow"]').carousel('pause');
-	$('[id^="picture_flow"]').carousel();
+function load_initial_data(initial){
+    $.getJSON('get-initial/?search='+initial+'&callback=?', function(data) {
+        if (data.type && data.type === "url"){
+            $.getJSON(data.url, function(data) {
+                parse_initial(data);
+            });
+        }
+        else {
+            // Json was made by shitty json maker - need to deprecate that shit and repalce with better model
+            parse_initial(data);
+        }
+    }).error(function() {
+        // load_result if not init data. Assumes default.
+        load_results(initial);
+        $.initial_search_term = initial;
+        HelpSpace.in_field.val(initial);
+        HelpSpace.suggested_search.hide();
+    });
 }
 
-YUI().use('autocomplete', 'autocomplete-highlighters', function(Y) {
-	Y.one('body').addClass('yui3-skin-sam');
-	Y.one('#in-field').plug(Y.Plugin.AutoComplete, {
-		resultHighlighter : 'phraseMatch',
-		resultListLocator: function (response) {
-			return (response[1]) || [];
-		},
-		source: 'https://en.wikipedia.org/w/api.php?action=opensearch&search={query}&limit=10&namespace=0&format=json&callback={callback}'
-	});
+function parse_initial(data){
+    if (data.initial_search_terms){
+        if (data.options && data.options instanceof Array){
+            // If passing in many - need to load many
+            load_results(data.initial_search_terms[0], data.options);
+        }
+        else{
+            load_results(data.initial_search_terms[0]);
+        }
+        $.initial_search_term = data.initial_search_terms[0];
+        HelpSpace.in_field.val(data.initial_search_terms[0]);
+    }
+
+    var suggested_search_items = [];
+    HelpSpace.suggested_search.show();
+    if (data.suggested_search && data.suggested_search instanceof Array){
+        $.each(data.suggested_search, function(key, val) {
+            suggested_search_items.push('<a href="#" rel="tooltip" title="'+val+'" onclick="my_search(\''+val+'\');">'+shorten(val)+'</a><br/>');
+        });
+    }
+    else if (data.suggested_search){
+        suggested_search_items.push('<a href="#" rel="tooltip" title="'+data.suggested_search+'" onclick="my_search(\''+data.suggested_search+'\');">'+shorten(data.suggested_search)+'</a><br/>');
+    }
+    else{
+        HelpSpace.suggested_search.hide();
+    }
+    HelpSpace.suggested_search_items.append(suggested_search_items.join('\n'));
+
+    var related_search_items = [];
+    if (data.related_search){
+        if (data.related_search instanceof Array){
+            $.each(data.related_search, function(key, val) {
+                related_search_items.push('<a href="#" rel="tooltip" title="'+val+'" onclick="my_search(\''+val+'\');">'+shorten(val)+'</a><br/>');
+            });
+        }
+        else{
+            related_search_items.push('<a href="#" rel="tooltip" title="'+data.related_search+'" onclick="my_search(\''+data.related_search+'\');">'+shorten(data.related_search)+'</a><br/>');
+        }
+    }
+    HelpSpace.related_search_items.append(related_search_items.join('\n'));
+    HelpSpace.related_search.show();
+
+    var initial_swf = [];
+    if (data.initial_swf){
+        $.each(data.initial_swf, function(key, val) {
+            initial_swf.push('<a class="various"  rel="tooltip" title="'+key+'" href="'+val+'">'+shorten(key)+'</a><br/>');
+        });
+    }
+    // else if(data.initial_swf){
+    //     initial_swf.push('<a class="various"  rel="tooltip" title="'+data.initial_swf[0]+'" href="'+data.initial_swf[1]+'">'+shorten(data.initial_swf[0])+'</a>');
+    // }
+    HelpSpace.sidebar_swf.append(initial_swf.join('\n'));
+    HelpSpace.related_swf.show();
+
+    var videos = [];
+    if (data.initial_youtube_id){
+        if (data.initial_swf instanceof Array){
+            $.each(data.initial_youtube_id, function(key, val) {
+                videos.push('<div class="item"><iframe id="player" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val+'?wmode=transparent&origin=http://cure.herokuapp.com/" frameborder="0"></iframe></div>');
+            });
+        }
+        else{
+            videos.push('<div class="item"><iframe id="player" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+data.initial_swf+'?wmode=transparent&origin=http://cure.herokuapp.com/" frameborder="0"></iframe></div>');
+        }
+    }
+    HelpSpace.video_flow_items.prepend(videos.join('\n'));
+    // Todo: hide video if no video and remove tab
+
+    var items = [];
+    if (data.initial_images){
+        if (data.initial_images instanceof Array){
+            $.each(data.initial_images, function(key, val) {
+                //change index to key
+                if (key%4 === 0) {
+                    if (key === 0) {
+                        items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
+                    }
+                    else {
+                        items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
+                    }
+                }
+                else if (key%4 !== 3){
+                    items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li>');
+                }
+                else {
+                    items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val+'"><img src="'+val+'" alt="" height="125px" width="100%"></a></div></li></div>');
+                }
+            });
+        }
+        else{
+            items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+data.initial_images+'"><img src="'+data.initial_images+'" alt="" height="125px" width="100%"></a></div></li>');
+        }
+    }
+    HelpSpace.picture_flow_items.prepend(items.join('\n'));
+    // Todo: hide picture if no video and remove tab
+    if (data.course && data.course !== ""){
+        load_class(orig_search, data.course);
+    }
+    if (data.subject && data.subject !== ""){
+        load_subject(orig_search, data.subject);
+    }
+}
+
+function load_class(orig_search, val){
+    search = encodeURIComponent(orig_search);
+    var links =[];
+    if (val === "cs125"){
+        $.getJSON("http://help-eck.herokuapp.com/"+search+"?callback=?",function(data){
+            links.push('<li class="nav-header" id="li-hook">Eck Notes</li>');
+            $.each(data.eck, function(k,v){
+                if (k <= 2){
+                    links.push('<a class="various fancybox.iframe" rel="tooltip" title="'+val[0]+'" href="'+val[1]+'">'+shorten(v[0])+'</a><br/>');
+                }
+            });
+            HelpSpace.related_hook.append(links.join('\n'));
+        }).done(function(){HelpSpace.related_hook.show();});
+    }
+}
+
+function load_subject(orig_search, val){
+    return;
+}
+
+function shorten(val){
+    return (val.length < 22)? ucwords(val,true) : ucwords(val.substr(0,22),true)+"...";
+}
+
+function load_results(orig_search, options){
+    options = options || [];
+    clear_previous_results();
+    wiki_search = orig_search.replace(/ /g,"_");
+    search = encodeURIComponent(orig_search);
+    if (getQueryVariable("course") !== "Computer science"){
+        load_class(orig_search, getQueryVariable("course"));
+    }
+    if (getQueryVariable("subject") !== "Computer science"){
+        load_subject(orig_search, getQueryVariable("subject"));
+    }
+    if ($.inArray("no_auto_wikipedia", options) === -1){
+        var wikipedia_url = 'http://www.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&explaintext=&exsectionformat=plain&titles='+wiki_search+'&redirects&callback=?';
+        $.getJSON(wikipedia_url, function(data) {
+            var heading;
+            var extract;
+            $.each(data.query.pages, function(index, val) {
+                heading = '<strong><a class="various fancybox.iframe" href="http://en.wikipedia.org/wiki/'+val.title+'?printable=yes">Wikipedia: '+val.title+'</a></strong>';
+                if (val.missing === "") {
+                    extract = 'Not found on Wikipedia, click on the title above for redirection';
+                }
+                else {
+                    extract = '<p>'+val.extract+'</p>';
+                }
+            });
+            HelpSpace.wiki_title.empty();
+            HelpSpace.wiki_extract.empty();
+            HelpSpace.wiki_title.append(heading);
+            HelpSpace.wiki_extract.append(extract);
+        });
+    }
+    // TODO: show wiki tab and wiki section
+
+    // if does NOT contain no_auto_images
+    if ($.inArray("no_auto_images", options) === -1){
+        var google_url = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q='+search+'&safe=active&rsz=8&callback=?';
+        $.getJSON(google_url, function(data) {
+            var items = [];
+            $.each(data.responseData.results, function(index, val) {
+                if (index%4 === 0) {
+                    if (index === 0) {
+                        items.push('<div class="item active"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+                    }
+                    else {
+                        items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+                    }
+                }
+                else if (index%4 !== 3){
+                    items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+                }
+                else {
+                    items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li></div>');
+                }
+            });
+            HelpSpace.picture_flow_items.append(items.join('\n'));
+        });
+    }
+    // TODO: show picture tab and picture section
+
+    // if does NOT contain no_auto_youtube
+    if ($.inArray("no_auto_youtube", options) === -1){
+        var youtube_url = 'https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&q='+search+'&max-results=8&format=5&safesearch=strict&callback=?';
+        $.getJSON(youtube_url, function(data) {
+            var videos = [];
+            $.each(data.data.items, function(index, val) {
+                var active = (index===1)?' active':'';
+                videos.push('<div class="item'+active+'"class="center"><iframe id="player" id="videos" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent&origin=http://cure.herokuapp.com/" frameborder="0"></iframe></div>');
+            });
+            HelpSpace.video_flow_items.append(videos.join('\n'));
+        });
+    }
+    // TODO: show youtube tab and videosection
+    load_from_api(search, options);
+
+    //Is this the best place to put this?
+    $('img').error(function() {
+        $(this).remove();
+    });
+}
+
+// Uncap and recap words
+function ucwords(str,force){
+    str=force ? str.toLowerCase() : str;
+    return str.replace(/(\b)([a-zA-Z])/g,
+    function(firstLetter){
+        return firstLetter.toUpperCase();
+    });
+}
+
+function load_from_api(search, options){
+    // if contains auto_api_docs
+    if ($.inArray("auto_api_docs", options) !== -1){
+        HelpSpace.api_docs.show();
+    }
+    else{
+        HelpSpace.api_docs.hide();
+    }
+    // if does NOT contain no_auto_factbites
+    if ($.inArray("no_auto_factbites", options) === -1){
+        $.getJSON('http://help-facts.herokuapp.com/'+search+'/?callback=?', function(data) {
+            var facts = [];
+            var factbites = [];
+            if (data.facts && data.facts instanceof Array){
+                $.each(data.facts, function(key, val) {
+                    if (key === 1){
+                        facts.push('<div class="item active">'+val+'</div>');
+                        factbites.push('<p>'+val+'</p>');
+                    }
+                    else{
+                        facts.push('<div class="item">'+val+'</div>');
+                        factbites.push('<p>'+val+'</p>');
+                    }
+                });
+            }
+            HelpSpace.fact_flow_items.append(facts.join('\n'));
+            HelpSpace.factbites.append(factbites.join('\n'));
+            HelpSpace.fact_flow.show();
+            HelpSpace.tab_factbites.show();
+        }).error(function() {
+            HelpSpace.fact_flow.hide();
+            HelpSpace.tab_factbites.hide();
+            //console.log("facts callback failed!!!");
+        });
+    }
+    else {
+        HelpSpace.fact_flow.hide();
+        HelpSpace.tab_factbites.hide();
+    }
+    // if does NOT contain no_auto_interview
+    if ($.inArray("no_auto_interview", options) === -1){
+        $.getJSON('http://help-interview.herokuapp.com/'+search+'/?callback=?', function(data) {
+            var interview = [];
+            var sidebar_interview = [];
+            $.each(data.interview, function(key, val) {
+                if (key <= 2) {
+                    sidebar_interview.push('<a class="various fancybox.iframe" rel="tooltip" title="'+val[0]+'" href="'+val[1]+'">'+shorten(val[0])+'</a><br/>');
+                }
+                interview.push('<a class="various fancybox.iframe" href="'+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
+            });
+            HelpSpace.sidebar_interview.append(sidebar_interview.join('\n'));
+            HelpSpace.interview.append(interview.join('\n'));
+            HelpSpace.related_interview.show();
+            HelpSpace.tab_interview.show();
+        }).error(function() {
+            HelpSpace.related_interview.hide();
+            HelpSpace.tab_interview.hide();
+            //console.log("interview callback failed!!!");
+        });
+    }
+    else {
+        HelpSpace.related_interview.hide();
+        HelpSpace.tab_interview.hide();
+    }
+    // if does NOT contain no_auto_pdfs
+    if ($.inArray("no_auto_pdfs", options) === -1){
+        $.getJSON('http://help-pdf.herokuapp.com/'+search+'/?callback=?', function(data) {
+            var pdf = [];
+            var sidebar_pdf = [];
+            $.each(data.pdf, function(key, val) {
+                if (key <= 2) {
+                    sidebar_pdf.push('<a class="various fancybox.iframe" rel="tooltip" title="'+val[0]+'" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+shorten(val[0])+'</a><br/>');
+                }
+                pdf.push('<a class="various fancybox.iframe" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
+            });
+            HelpSpace.sidebar_pdf.append(sidebar_pdf.join('\n'));
+            HelpSpace.pdf.append(pdf.join('\n'));
+            HelpSpace.tab_pdf.show();
+            HelpSpace.related_pdf.show();
+            // sidebar tab
+
+        }).error(function() {
+            //console.log("pdf callback failed!!!");
+            HelpSpace.tab_pdf.hide();
+            HelpSpace.related_pdf.hide();
+        });
+    }
+    else {
+        HelpSpace.tab_pdf.hide();
+        HelpSpace.pdf.hide();
+        HelpSpace.related_pdf.hide();
+    }
+    // if does NOT contain no_auto_related
+    if ($.inArray("no_auto_related", options) === -1){
+        $.getJSON('http://help-related.herokuapp.com/'+search+'/?callback=?', function(data) {
+            var related_search_items = [];
+            $.each(data.related, function(key, val) {
+                if (key <= 3) {
+                    related_search_items.push('<a href="#" rel="tooltip" title="'+val+'" onclick="my_search(\''+val+'\');">'+shorten(val)+'</a><br/>');
+                }
+            });
+            HelpSpace.related_search_items.append(related_search_items.join('\n'));
+            HelpSpace.related_search.show();
+
+        }).error(function() {
+            //console.log("realated callback failed!!!");
+            HelpSpace.related_search.hide();
+        });
+    }
+    else {
+        HelpSpace.related_search.hide();
+    }
+    // if contains auto_swfs
+    if ($.inArray("auto_swfs", options) !== -1){
+        $.getJSON('http://help-swf.herokuapp.com/'+search+'/?callback=?', function(data) {
+            var swf = [];
+            var sidebar_swf = [];
+            $.each(data.swf, function(key, val) {
+                if (key <= 2) {
+                    sidebar_swf.push('<a class="various fancybox.iframe" rel="tooltip" title="'+val[0]+'" href="'+val[1]+'">'+shorten(val[0])+'</a><br/>');
+                }
+                swf.push('<a class="various fancybox.iframe" href="'+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
+            });
+            HelpSpace.sidebar_swf.append(sidebar_swf.join('\n'));
+            HelpSpace.swf.append(swf.join('\n'));
+            HelpSpace.tab_swf.show();
+            HelpSpace.swf.show();
+            HelpSpace.related_swf.show();
+
+        }).error(function() {
+            //console.log("interview callback failed!!!");
+            HelpSpace.tab_swf.hide();
+            HelpSpace.swf.hide();
+            HelpSpace.related_swf.hide();
+        });
+    }
+    else {
+        HelpSpace.tab_swf.hide();
+        HelpSpace.swf.hide();
+        HelpSpace.related_swf.hide();
+    }
+    // if does NOT contain no_auto_images
+    if ($.inArray("no_auto_images", options) === -1){
+        $.getJSON('http://help-img.herokuapp.com/'+search+'/?callback=?', function(data) {
+            var items = [];
+            $.each(data.img, function(index, val) {
+                if (index <= 15) {
+                    if (index%4 === 0) {
+                        if (index === 0) {
+                            items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+                        }
+                        else {
+                            items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+                        }
+                    }
+                    else if (index%4 !== 3){
+                        items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+                    }
+                    else {
+                        items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li></div>');
+                    }
+                }
+            });
+            HelpSpace.picture_flow_items.append(items.join('\n'));
+            HelpSpace.picture_flow.show();
+
+        });
+        // .error(function() {
+        //     HelpSpace.picture_flow.hide();
+        // });
+    }
+    // else {
+    //     HelpSpace.picture_flow.hide();
+    // }
+}
+
+$('[id^="video_flow"]').carousel('pause');
+// $('#picture_flow').carousel();
+$('#fact_flow').carousel({
+  interval: 10000
 });
 
+YUI().use('autocomplete', 'autocomplete-highlighters', function(Y) {
+    Y.one('body').addClass('yui3-skin-sam');
+    Y.one('#in-field').plug(Y.Plugin.AutoComplete, {
+        resultHighlighter : 'phraseMatch',
+        resultListLocator: function (response) {
+            return (response[1]) || [];
+        },
+        source: 'https://en.wikipedia.org/w/api.php?action=opensearch&search={query}&limit=10&namespace=0&format=json&callback={callback}'
+    });
+});
 
-// https://api.datamarket.azure.com/Data.ashx/Bing/Search/Image?Query=%27binary%20search%20tree%27&Market=%27en-US%27&Adult=%27Moderate%27&$top=50&$format=Atom
-// http://msdn.microsoft.com/en-us/library/dd250846.aspx
-// 9B2B80CDB8B7ED402F4D7D79B8243F25F8A95B2E
-// http://api.search.live.net/json.aspx?AppId=5B0D22D739247C06BE7F990ECBEC1A144F9B7C39
-//     &Sources=image&Query=prague&Image.Count=10
-//     &Image.Offset=0&Image.Filters=Size:Medium
-// http://api.search.live.net/json.aspx?AppId=5B0D22D739247C06BE7F990ECBEC1A144F9B7C39&Sources=image&Query=prague&Image.Count=3&Image.Offset=0&Image.Filters=Size:Medium
+$('#myTab a[href="#combo"]').click(function (e) {
+    e.preventDefault();
+    HelpSpace.video_image_span.show().removeClass("span9").addClass("span7");
+    HelpSpace.video_flow.show();
+    HelpSpace.picture_flow.show();
+    HelpSpace.wiki_text.show().removeClass("span9").addClass("span3");
+    HelpSpace.fact_span.show();
+    HelpSpace.interview.hide();
+    HelpSpace.factbites.hide();
+    HelpSpace.wikipedia.hide();
+    HelpSpace.swf.hide();
+    HelpSpace.pdf.hide();
+    HelpSpace.wolfram.hide();
+    HelpSpace.youtube.hide();
+});
 
+$('#myTab a[href="#youtube"]').click(function (e) {
+    e.preventDefault();
+    disable_all();
+    HelpSpace.video_image_span.show().removeClass("span7").addClass("span9");
+    HelpSpace.video_flow.show();
+    HelpSpace.picture_flow.hide();
+});
 
-// http://en.wikipedia.org/wiki/Special:Export/LinkedIn
-// http://www.mediawiki.org/wiki/API#A_simple_example
-// http://www.mediawiki.org/wiki/API:Query>>>>>>> other
+$('#myTab a[href="#images"]').click(function (e) {
+    e.preventDefault();
+    disable_all();
+    HelpSpace.video_image_span.show();
+    HelpSpace.video_flow.hide();
+    HelpSpace.picture_flow.show();
+});
 
-//Youtube
-//Developer Key: AI39si5VIAdPPeexdPxRg9SHTOdNrUAvqHmq-GW6KFB26B_YCKSyGvNDdc9nEK8LH-a8NOKnJWbZvdejZlwp8gKgfV2qA078dw
+$('#myTab a[href="#wolfram"]').click(function (e) {
+    e.preventDefault();
+    disable_all();
+    HelpSpace.wolfram.show();
+});
 
-//$('#element').youTubeEmbed('http://www.youtube.com/watch?v=u1zgFlCw8Aw');
-// Or:
-//$('#element').youTubeEmbed({
-//	video			: 'http://www.youtube.com/watch?v=u1zgFlCw8Aw',
-//	width			: 600, 		// Height is calculated automatically
-//	progressBar	: false		// Hide the progress bar
-//});
+$('#myTab a[href="#pdf"]').click(function (e) {
+    e.preventDefault();
+    disable_all();
+    HelpSpace.pdf.show();
+});
 
-//Wolfram
-//APPID(from other people): QKVJ42-7UX5XLE9AT
-//(applied by myself):
-//	UQJRUU-XAE263JGR5
-//	UQJRUU-QVWHEHR4J7
-//	UQJRUU-L2QP92GWY9
-//	UQJRUU-L5A9PJLXEQ
-//	UQJRUU-H95AUX22UX
-//	UQJRUU-5KW92HUQ5K
-//	UQJRUU-RG3T6KHHL4
-//	UQJRUU-ETY9VGVRP3
-//	UQJRUU-RLW7EXRXAP
-//	UQJRUU-HYXPX23J2J
-//var key = Wub_GetVaultValue("wolframalphakey") ? nil;
-//var res = nil;
-//var format = "";
-//if key != nil then
-//   format = "&format=plaintext";
-//   var P = GetURL("http://api.wolframalpha.com/v1/query?input=" + query + "&appid=" + key + format);
+$('#myTab a[href="#swf"]').click(function (e) {
+    e.preventDefault();
+    disable_all();
+    HelpSpace.swf.show();
+});
 
-//http://api.wolframalpha.com/v2/query?input=pi&appid=XXXX
-//url="http://api.wolframalpha.com/v2/query?input=GF("+str(n)+")&appid="+app+"&format=plaintext&includepodid=AdditionTable&includepodid=MultiplicationTable"
-// http://stackoverflow.com/questions/9745746/twitter-bootstrap-2-carousel-display-a-set-of-thumbnails-at-a-time-like-jcarou
-// http://jsfiddle.net/andresilich/S2rnm/show/
-// http://finnrudolph.de/ImageFlow/Installation
-// https://github.com/reddit/reddit/wiki/API
+$('#myTab a[href="#wikipedia"]').click(function (e) {
+    e.preventDefault();
+    disable_all();
+    HelpSpace.wiki_text.show().removeClass("span3").addClass("span9");
+});
+
+$('#myTab a[href="#factbites"]').click(function (e) {
+    e.preventDefault();
+    disable_all();
+    HelpSpace.factbites.show().addClass("span9");
+});
+
+$('#myTab a[href="#interview"]').click(function (e) {
+    e.preventDefault();
+    disable_all();
+    HelpSpace.interview.show();
+});
+
+function disable_all(){
+    HelpSpace.interview.hide();
+    HelpSpace.factbites.hide();
+    HelpSpace.wikipedia.hide();
+    HelpSpace.swf.hide();
+    HelpSpace.pdf.hide();
+    HelpSpace.wolfram.hide();
+    HelpSpace.youtube.hide();
+    HelpSpace.video_image_span.hide();
+    HelpSpace.fact_span.hide();
+    HelpSpace.wiki_text.hide();
+}

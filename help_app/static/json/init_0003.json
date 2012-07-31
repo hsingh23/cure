@@ -1,0 +1,61 @@
+{
+    "initial_search_terms":[
+        "K-d tree"
+    ],
+    "options":[
+        "no_auto_web",
+        "no_auto_related",
+        "no_auto_images",
+        "no_auto_youtube",
+        "no_auto_pdfs",
+        "no_auto_wikipedia",
+        "no_auto_factbites",
+        "no_auto_interview",
+        "auto_api_docs",
+        "auto_swfs"
+    ],
+    "subject":"cs",
+    "course":"cs225",
+    "initial_wiki_pages": [
+        "http://en.wikipedia.org/wiki/K-d_tree",
+        "http://en.wikipedia.org/wiki/Quicksort",
+        "http://en.wikipedia.org/wiki/Quickselect",
+        "http://en.wikipedia.org/wiki/Binary_tree"
+    ],
+    "suggested_search": [
+        "# diagram",
+        "# c++",
+        "# applications",
+        "quick select",
+        "quick sort",
+        "distance formula"
+    ],
+    "related_search": [
+        "binary search tree",
+        "avl tree",
+        "red black tree"
+    ],
+    "initial_youtube_id": {
+        "K-d_tree":"2SbVSxWGtpI"
+    },
+    "lecture_notes": [],
+    "initial_images": [
+        "http://www-hpcc.astro.washington.edu/faculty/marios/papers/perform/_14500_figure62.gif",
+        "http://www.mathworks.com/help/toolbox/stats/kdtreelinesnewpoint.png",
+        "http://groups.csail.mit.edu/graphics/classes/6.838/S98/meetings/m13/kd_query.gif",
+        "http://drytail.up.seesaa.net/image/kdtree.png",
+        "http://orhanbalci.net/tr/wp-includes/images/netbeans/kd_tree_visualizer2.png"
+    ],
+
+    "initial_swf": {
+        "K-d tree Demo":"http://ma38su.org/swf/kd-tree.swf",
+        "Review":"http://docs.4share.vn/Resources/Flashs/1/15936.swf"
+    },
+    "initial_websites_sidebar_links": {
+        "MP 6":"https://wiki.engr.illinois.edu/display/cs225fa11/MP+6"
+    },
+    "initial_pdfs": {
+        "Kd tree explained":"http://www.cs.cmu.edu/~awm/animations/kdtree/kdtree.pdf",
+        "Searching K-d_tree":"http://www.cs.cmu.edu/~awm/animations/kdtree/search-simple-small.pdf"
+    }
+}

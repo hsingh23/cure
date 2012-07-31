@@ -60,6 +60,7 @@ function clear_previous_results(){
     HelpSpace.sidebar_interview.empty();
     HelpSpace.related_search_items.empty();
     HelpSpace.suggested_search_items.empty();
+    HelpSpace.related_hook.empty();
     // Flows
     HelpSpace.fact_flow_items.empty();
     HelpSpace.picture_flow_items.empty();
@@ -89,6 +90,7 @@ $(document).ready(function() {
         openEffect  : 'none',
         closeEffect : 'none'
     });
+    HelpSpace.api_docs.hide();
     HelpSpace.in_field.bind('keypress', function(e) {
         var code = e.keyCode || e.which;
         if(code === 13) {
@@ -104,6 +106,7 @@ function disable_input(){
     HelpSpace.in_field.attr("disabled", "disabled");
     HelpSpace.related_search.hide();
     HelpSpace.suggested_search.hide();
+    HelpSpace.related_hook.hide();
     setTimeout('HelpSpace.in_field.removeAttr("disabled");',2500);
     setTimeout('HelpSpace.related_search.show();',2500);
     setTimeout('HelpSpace.suggested_search.show();',2500);
@@ -116,7 +119,7 @@ function my_search(search_term){
     else{
         HelpSpace.in_field.val(search_term)
     }
-    load_results(HelpSpace.in_field.val());
+    load_initial_data(HelpSpace.in_field.val());
     return false;
 }
 
@@ -154,27 +157,27 @@ function load_initial_data(initial){
 }
 
 function parse_initial(data){
-    // Have to mod load_results, send it options
-    if (data.initial_search_term){
+    if (data.initial_search_terms){
         if (data.options && data.options instanceof Array){
-            load_results(data.initial_search_term, data.options);
+            // If passing in many - need to load many
+            load_results(data.initial_search_terms[0], data.options);
         }
         else{
-            load_results(data.initial_search_term)
+            load_results(data.initial_search_terms[0]);
         }
-        $.initial_search_term = data.initial_search_term;
-        HelpSpace.in_field.val(data.initial_search_term);
+        $.initial_search_term = data.initial_search_terms[0];
+        HelpSpace.in_field.val(data.initial_search_terms[0]);
     }
 
     var suggested_search_items = [];
     HelpSpace.suggested_search.show();
     if (data.suggested_search && data.suggested_search instanceof Array){
         $.each(data.suggested_search, function(key, val) {
-            suggested_search_items.push('<a href="#" rel="tooltip" title="'+val+'" onclick="my_search(\''+val+'\');">'+shorten(val)+'</a>');
+            suggested_search_items.push('<a href="#" rel="tooltip" title="'+val+'" onclick="my_search(\''+val+'\');">'+shorten(val)+'</a><br/>');
         });
     }
     else if (data.suggested_search){
-        suggested_search_items.push('<a href="#" rel="tooltip" title="'+data.suggested_search+'" onclick="my_search(\''+data.suggested_search+'\');">'+shorten(data.suggested_search)+'</a>');
+        suggested_search_items.push('<a href="#" rel="tooltip" title="'+data.suggested_search+'" onclick="my_search(\''+data.suggested_search+'\');">'+shorten(data.suggested_search)+'</a><br/>');
     }
     else{
         HelpSpace.suggested_search.hide();
@@ -185,11 +188,11 @@ function parse_initial(data){
     if (data.related_search){
         if (data.related_search instanceof Array){
             $.each(data.related_search, function(key, val) {
-                related_search_items.push('<a href="#" rel="tooltip" title="'+val+'" onclick="my_search(\''+val+'\');">'+shorten(val)+'</a>');
+                related_search_items.push('<a href="#" rel="tooltip" title="'+val+'" onclick="my_search(\''+val+'\');">'+shorten(val)+'</a><br/>');
             });
         }
         else{
-            related_search_items.push('<a href="#" rel="tooltip" title="'+data.related_search+'" onclick="my_search(\''+data.related_search+'\');">'+shorten(data.related_search)+'</a>');
+            related_search_items.push('<a href="#" rel="tooltip" title="'+data.related_search+'" onclick="my_search(\''+data.related_search+'\');">'+shorten(data.related_search)+'</a><br/>');
         }
     }
     HelpSpace.related_search_items.append(related_search_items.join('\n'));
@@ -197,15 +200,13 @@ function parse_initial(data){
 
     var initial_swf = [];
     if (data.initial_swf){
-        if (data.initial_swf && data.initial_swf instanceof Array){
-            $.each(data.initial_swf, function(key, val) {
-                initial_swf.push('<a class="various"  rel="tooltip" title="'+val+'" href="'+val+'">'+shorten((val.substring(val.lastIndexOf("/") + 1)))+'</a>');
-            });
-        }
-        else{
-            initial_swf.push('<a class="various"  rel="tooltip" title="'+data.initial_swf+'" href="'+data.initial_swf+'">'+shorten((data.initial_swf.substring(data.initial_swf.lastIndexOf("/") + 1)))+'</a>');
-        }
+        $.each(data.initial_swf, function(key, val) {
+            initial_swf.push('<a class="various"  rel="tooltip" title="'+key+'" href="'+val+'">'+shorten(key)+'</a><br/>');
+        });
     }
+    // else if(data.initial_swf){
+    //     initial_swf.push('<a class="various"  rel="tooltip" title="'+data.initial_swf[0]+'" href="'+data.initial_swf[1]+'">'+shorten(data.initial_swf[0])+'</a>');
+    // }
     HelpSpace.sidebar_swf.append(initial_swf.join('\n'));
     HelpSpace.related_swf.show();
 
@@ -250,6 +251,32 @@ function parse_initial(data){
     }
     HelpSpace.picture_flow_items.prepend(items.join('\n'));
     // Todo: hide picture if no video and remove tab
+    if (data.class && data.class !== ""){
+        load_class(orig_search, data.class);
+    }
+    if (data.subject && data.subject !== ""){
+        load_subject(orig_search, data.subject);
+    }
+}
+
+function load_class(orig_search, val){
+    // console.log(val);
+}
+function load_subject(orig_search, val){
+    console.log("load_subject "+val);
+    search = encodeURIComponent(orig_search);
+    var links =[];
+    if (val === "cs125"){
+        $.getJSON("http://help-eck.herokuapp.com/"+search+"?callback=?",function(data){
+            links.push('<li class="nav-header" id="li-hook">Eck Notes</li>');
+            $.each(data.eck, function(k,v){
+                if (k <= 2){
+                    links.push('<a class="various fancybox.iframe" rel="tooltip" title="'+val[0]+'" href="'+val[1]+'">'+shorten(v[0])+'</a><br/>');
+                }
+            });
+            HelpSpace.related_hook.append(links.join('\n'));
+        }).done(function(){HelpSpace.related_hook.show();});
+    }
 }
 
 function shorten(val){
@@ -261,7 +288,13 @@ function load_results(orig_search, options){
     clear_previous_results();
     wiki_search = orig_search.replace(/ /g,"_");
     search = encodeURIComponent(orig_search);
-    if (!options.no_auto_wikipedia){
+    if (getQueryVariable("class") !== "Computer science"){
+        load_class(orig_search, getQueryVariable("class"));
+    }
+    if (getQueryVariable("subject") !== "Computer science"){
+        load_subject(orig_search, getQueryVariable("subject"));
+    }
+    if ($.inArray("no_auto_wikipedia", options) === -1){
         var wikipedia_url = 'http://www.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&explaintext=&exsectionformat=plain&titles='+wiki_search+'&redirects&callback=?';
         $.getJSON(wikipedia_url, function(data) {
             var heading;
@@ -283,8 +316,8 @@ function load_results(orig_search, options){
     }
     // TODO: show wiki tab and wiki section
 
-
-    if (!options.no_auto_images){
+    // if does NOT contain no_auto_images
+    if ($.inArray("no_auto_images", options) === -1){
         var google_url = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q='+search+'&safe=active&rsz=8&callback=?';
         $.getJSON(google_url, function(data) {
             var items = [];
@@ -309,7 +342,8 @@ function load_results(orig_search, options){
     }
     // TODO: show picture tab and picture section
 
-    if (!options.no_auto_youtube){
+    // if does NOT contain no_auto_youtube
+    if ($.inArray("no_auto_youtube", options) === -1){
         var youtube_url = 'https://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&q='+search+'&max-results=8&format=5&safesearch=strict&callback=?';
         $.getJSON(youtube_url, function(data) {
             var videos = [];
@@ -339,7 +373,15 @@ function ucwords(str,force){
 }
 
 function load_from_api(search, options){
-    if (!options.no_auto_factbites){
+    // if contains auto_api_docs
+    if ($.inArray("auto_api_docs", options) !== -1){
+        HelpSpace.api_docs.show();
+    }
+    else{
+        HelpSpace.api_docs.hide();
+    }
+    // if does NOT contain no_auto_factbites
+    if ($.inArray("no_auto_factbites", options) === -1){
         $.getJSON('http://help-facts.herokuapp.com/'+search+'/?callback=?', function(data) {
             var facts = [];
             var factbites = [];
@@ -369,8 +411,8 @@ function load_from_api(search, options){
         HelpSpace.fact_flow.hide();
         HelpSpace.tab_factbites.hide();
     }
-
-    if (!options.no_auto_interview){
+    // if does NOT contain no_auto_interview
+    if ($.inArray("no_auto_interview", options) === -1){
         $.getJSON('http://help-interview.herokuapp.com/'+search+'/?callback=?', function(data) {
             var interview = [];
             var sidebar_interview = [];
@@ -394,8 +436,8 @@ function load_from_api(search, options){
         HelpSpace.related_interview.hide();
         HelpSpace.tab_interview.hide();
     }
-
-    if (!options.no_auto_pdfs){
+    // if does NOT contain no_auto_pdfs
+    if ($.inArray("no_auto_pdfs", options) === -1){
         $.getJSON('http://help-pdf.herokuapp.com/'+search+'/?callback=?', function(data) {
             var pdf = [];
             var sidebar_pdf = [];
@@ -422,8 +464,8 @@ function load_from_api(search, options){
         HelpSpace.pdf.hide();
         HelpSpace.related_pdf.hide();
     }
-
-    if (!options.no_auto_related){
+    // if does NOT contain no_auto_related
+    if ($.inArray("no_auto_related", options) === -1){
         $.getJSON('http://help-related.herokuapp.com/'+search+'/?callback=?', function(data) {
             var related_search_items = [];
             $.each(data.related, function(key, val) {
@@ -442,8 +484,8 @@ function load_from_api(search, options){
     else {
         HelpSpace.related_search.hide();
     }
-
-    if (options.auto_swfs){
+    // if contains auto_swfs
+    if ($.inArray("auto_swfs", options) !== -1){
         $.getJSON('http://help-swf.herokuapp.com/'+search+'/?callback=?', function(data) {
             var swf = [];
             var sidebar_swf = [];
@@ -471,8 +513,8 @@ function load_from_api(search, options){
         HelpSpace.swf.hide();
         HelpSpace.related_swf.hide();
     }
-
-    if (!options.no_auto_images){
+    // if does NOT contain no_auto_images
+    if ($.inArray("no_auto_images", options) === -1){
         $.getJSON('http://help-img.herokuapp.com/'+search+'/?callback=?', function(data) {
             var items = [];
             $.each(data.img, function(index, val) {
@@ -496,14 +538,14 @@ function load_from_api(search, options){
             HelpSpace.picture_flow_items.append(items.join('\n'));
             HelpSpace.picture_flow.show();
 
-        }).error(function() {
-            //console.log("interview callback failed!!!");
-            HelpSpace.picture_flow.hide();
         });
+        // .error(function() {
+        //     HelpSpace.picture_flow.hide();
+        // });
     }
-    else {
-        HelpSpace.picture_flow.hide();
-    }
+    // else {
+    //     HelpSpace.picture_flow.hide();
+    // }
 }
 
 $('[id^="video_flow"]').carousel('pause');

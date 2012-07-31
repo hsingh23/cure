@@ -1,55 +1,57 @@
 <!doctype html>
-<!-- manifest="jsonlint.manifest" -->
 <html lang="en">
-    <head>
-        {% load staticfiles %}
-        <meta charset="utf-8">
-        <meta name="description" content="JSON Lint is a web based validator and reformatter for JSON, a lightweight data-interchange format.">
-        <title>
-            What's for dinner?
-        </title>
-        <script type="text/javascript">
-            if (typeof JSON === 'undefined') {
-                // TODO add static
-                document.write('<scr' + 'ipt type="te'+'xt/javascript" src="{% static "js/json2.j" %}"></sc' + 'ript>');
-            }
-        </script>
-        <script src="{% static 'js/jquery.js' %}" type="text/javascript"></script>
-        <script src="{% static 'js/jquery-linedtextarea.js' %}" type="text/javascript"></script>
-        <link href="{% static 'css/jquery-linedtextarea.css' %}" type="text/css" rel="stylesheet">
-        <script type="text/javascript" src="{% static 'js/jsl.parser.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/jsl.format.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/jsl.interactions_0001.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/bootstrap-modal.js' %}"></script>
+<head>
+{% load staticfiles %}
+<meta charset="utf-8">
+<meta name="description" content="JSON Lint is a web based validator and reformatter for JSON, a lightweight data-interchange format.">
+<title>
+    What's for dinner?
+</title>
+<script type="text/javascript">
+    if (typeof JSON === 'undefined') {
+        // TODO add static
+        document.write('<scr' + 'ipt type="te'+'xt/javascript" src="{% static "js/json2.j" %}"></sc' + 'ript>');
+    }
+</script>
+<script src="{% static 'js/jquery.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/jquery-linedtextarea.js' %}" type="text/javascript"></script>
+<link href="{% static 'css/jquery-linedtextarea.css' %}" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{% static 'js/jsl.parser.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jsl.format.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jsl.interactions_0001.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap-modal.js' %}"></script>
 
-  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet"/>
-    <style type="text/css">
-body {
-padding-top: 60px;
-padding-bottom: 20px;
-}
-.success {
-background: #E6EFC2;
-color: #529214;
-border-color: #C6D880;
-}
-.error, .notice, .success {
-margin-bottom: 1em;
-border: 2px solid;
-padding: .8em;
-}
-.error {
-background: #FBE3E4;
-color: #D12F19;
-border-color: #FBC2C4;
-}
-    </style>
-  <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-
-    </head>
-    <body>
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet"/>
+<style type="text/css">
+    body .modal {
+        width: 90%;
+        margin: -45% 0 0 -45%;
+    }
+    body {
+    padding-top: 60px;
+    padding-bottom: 20px;
+    }
+    .success {
+    background: #E6EFC2;
+    color: #529214;
+    border-color: #C6D880;
+    }
+    .error, .notice, .success {
+    margin-bottom: 1em;
+    border: 2px solid;
+    padding: .8em;
+    }
+    .error {
+    background: #FBE3E4;
+    color: #D12F19;
+    border-color: #FBC2C4;
+    }
+</style>
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+<body>
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
@@ -70,7 +72,7 @@ border-color: #FBC2C4;
 </div>
 <div class="container">
     <h1 id="headerText">
-        Enter Keyword - Load Sample - Modify JSON - Submit - Profit???
+        ~Enter Keyword - Load Sample - Modify JSON - Validate - Submit~
     </h1>
     <form class="well form-search" onsubmit="load_json($('#in-field').val()); return false;">
         <input type="text" class="input search-query" placeholder='Keyword' name="keyword" id='in-field'/>
@@ -84,8 +86,9 @@ border-color: #FBC2C4;
         <textarea id="json_input" name="json_input" class="span11 json_input" rows="15" cols="100" spellcheck="false" placeholder="Enter JSON to validate." value=""></textarea>
         <br/><br/>
         <button name="validate" id="validate" value="Validate" class="btn btn-large btn-success">Validate</button>
-        <a href="#" id="faqButton" class="bold" name="faqButton">FAQ</a>
         <button onclick="send_request(); return false;" id="submit" value="Submit" class="btn btn-large btn-primary">Submit</button>
+        <a style="float:right;" href="#" id="faqButton" class="btn btn-large btn-info" name="faqButton">FAQ</a>
+        <a data-toggle="modal" href="#api" class="btn btn-large btn-info">API Explained</a>
     </form>
 
     <div id="results_header" class="hide">
@@ -146,10 +149,102 @@ border-color: #FBC2C4;
         </div>
     </div>
 </div>
+
+<div class="modal hide" id="api">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>API explained</h3>
+  </div>
+  <div class="modal-body" id="sample_goes_here">
+<pre>
+Help API Explained:
+
+{
+    // [REQUIRED] This is what will pull the original results, Currently - only the first option is used
+    "initial_search_term":[
+        "k-d tree"
+    ],
+
+    // [Optional] This sets what to get automatically with the keyword
+    "options":[
+        // OPT OUT!!!
+        "no_auto_web", // Don't get any web results automatically
+        "no_auto_related", // Don't get any related results automatically
+        "no_auto_images", // Don't get any images automatically
+        "no_auto_youtube", // Don't get any youtube vidoes automatically. CAREFUL - may cause template to mess up if you Don't specify any vidoes
+        "no_auto_pdfs", // Don't get any pdfs automatically
+        "no_auto_wikipedia", // Don't get any wikipedia articles automatically
+        "no_auto_factbites", // Don't get any factbites automatically
+        "no_auto_interview", // Don't tack on interview questions to search term and get results
+        // OPT IN!!!
+        "auto_api_docs", // Put api docs iframes on sidebar
+        "auto_swfs" // Get swf's related to search - don't get great results
+    ],
+    // Subject load subject specific files
+    "subject": "",
+    // Course loads course specific files
+    "course": "",
+    // [Optional] This pulls up multiple wiki pages in tabs in the wiki section
+    "initial_wiki_pages": [
+        "http://en.wikipedia.org/wiki/K-d_tree",
+        "http://en.wikipedia.org/wiki/Quicksort",
+        "http://en.wikipedia.org/wiki/Quickselect",
+        "http://en.wikipedia.org/wiki/Binary_tree"
+    ],
+    // [Optional] The # tells to append to the initial_search_term; These results will show up right under the search box under the suggested search section window
+    "suggested_search": [
+        "# diagram",
+        "# c++",
+        "# applications",
+        "quick select",
+        "quick sort",
+        "distance formula"
+    ],
+    // [Optional] The # tells to append to the initial_search_term; These results will show up below the suggested search under the search box
+    "related_search": [
+        "binary search tree",
+        "avl tree",
+        "red black tree"
+    ],
+    // Lecture notes go to special Lecture note section - Still to be implemented
+    "lecture_notes": [
+    ],
+    // [Optional] This loads up some inital images
+    "initial_images": [
+        "http://www-hpcc.astro.washington.edu/faculty/marios/papers/perform/_14500_figure62.gif",
+        "http://www.mathworks.com/help/toolbox/stats/kdtreelinesnewpoint.png",
+        "http://groups.csail.mit.edu/graphics/classes/6.838/S98/meetings/m13/kd_query.gif",
+        "http://drytail.up.seesaa.net/image/kdtree.png",
+        "http://orhanbalci.net/tr/wp-includes/images/netbeans/kd_tree_visualizer2.png"
+    ],
+
+    // [Optional] Put only swf files here and I'll put them on the page somewhere
+    "initial_swf": {
+        "K-d tree Demo":"http://ma38su.org/swf/kd-tree.swf",
+        "K-d tree Review":"http://docs.4share.vn/Resources/Flashs/1/15936.swf"
+    },
+    // Add class links or any other here
+    "initial_websites_sidebar_links": {
+        "MP 6":"https://wiki.engr.illinois.edu/display/cs225fa11/MP+6"
+    },
+    // Initial PDFs
+    "initial_pdfs": {
+        "Kd tree explained":"http://www.cs.cmu.edu/~awm/animations/kdtree/kdtree.pdf",
+        "Searching K-d_tree":"http://www.cs.cmu.edu/~awm/animations/kdtree/search-simple-small.pdf"
+    }
+}
+</pre>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Close</a>
+  </div>
+</div>
+
 <script type="text/javascript">
     $(function() {
         $('#in-field').focus();
         $('#submit').hide();
+        // $.get("http://statics.site50.net/json/help_api_explained_0002.html", function(data){$('#sample_goes_here').val(data);});
     });
     function send_request(){
         $.post("/post-submit-json/",
@@ -169,13 +264,12 @@ border-color: #FBC2C4;
             else{
                 $('#json_input').val(JSON.stringify(data));
             }
-        }).fail(function(){load_sample();}).done(function(){$("#validate").click();});
+        }).fail(function(){$('#submit').hide(); load_sample();}).done(function(){$("#validate").click(); $('#submit').hide();});
     }
     function load_sample(){
-        $.getJSON('http://get-json.herokuapp.com/?resource=http://statics.site50.net/json/init_0002.json&callback=?', function(data) {
+        $.getJSON('http://get-json.herokuapp.com/?resource=http://statics.site50.net/json/sample_0001.json&callback=?', function(data) {
             $('#json_input').val(JSON.stringify(data));
         }).done(function(){$("#validate").click();});
-
     }
 </script>
 </body>
