@@ -132,7 +132,8 @@
 <script src="{% static 'js/bootstrap.js' %}"></script>
 <script src="{% static 'js/jquery.mousewheel-3.0.6.pack.js' %}"></script>
 <script src="{% static 'js/jquery.fancybox.pack.js' %}"></script>
-<script src="{% static 'js/help_page_0002.js' %}"></script>
+<!-- <script src="{% static 'js/help_page.js' %}"></script> -->
+<script src="{% static 'js/help_page_0003.js' %}"></script>
 <script type="text/javascript">
 
   var _gaq = _gaq || [];

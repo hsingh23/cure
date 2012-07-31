@@ -267,7 +267,7 @@ function load_class(orig_search, val){
             links.push('<li class="nav-header" id="li-hook">Eck Notes</li>');
             $.each(data.eck, function(k,v){
                 if (k <= 2){
-                    links.push('<a class="various fancybox.iframe" rel="tooltip" title="'+val[0]+'" href="'+val[1]+'">'+shorten(v[0])+'</a><br/>');
+                    links.push('<a class="various fancybox.iframe" rel="tooltip" title="'+v[0]+'" href="'+v[1]+'">'+shorten(v[0])+'</a><br/>');
                 }
             });
             HelpSpace.related_hook.append(links.join('\n'));
