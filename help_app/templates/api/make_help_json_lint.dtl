@@ -83,7 +83,7 @@
         {% csrf_token %}
         <input type="hidden" id="reformat" value="1" />
         <input type="hidden" id="compress" value="0" />
-        <textarea id="json_input" name="json_input" class="span11 json_input" rows="15" cols="100" spellcheck="false" placeholder="Enter JSON to validate." value=""></textarea>
+        <textarea id="json_input" name="json_input" class="span10 json_input" rows="15" cols="100" spellcheck="false" placeholder="Enter JSON to validate." value=""></textarea>
         <br/><br/>
         <button name="validate" id="validate" value="Validate" class="btn btn-large btn-success">Validate</button>
         <button onclick="send_request(); return false;" id="submit" value="Submit" class="btn btn-large btn-primary">Submit</button>
