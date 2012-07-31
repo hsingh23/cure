@@ -3,8 +3,8 @@ from django.conf.urls.defaults import *
 # from django.views.decorators.cache import cache_page
 from help_app.views import results
 # Uncomment the next two lines to enable the admin:
-from django.contrib import admin
-admin.autodiscover()
+# from django.contrib import admin
+# admin.autodiscover()
 
 # from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
@@ -19,15 +19,15 @@ urlpatterns = patterns('help_app.views',
     url(r'^$', 'help'),
     url(r'^help(\d{1,2})/$', 'help_itter'),
     # Cache this for 5 days
-    url(r'^api/(.*)/$', 'results'),
+    # url(r'^api/(.*)/$', 'results'),
     # Uncomment the admin/doc line below to enable admin documentation:
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(admin.site.urls)),
+    # url(r'^admin/', include(admin.site.urls)),
 
     url(r'^get-initial/$', 'get_initial'),
-    url(r'^make-help-json/$', 'make_help_json'),
+    url(r'^make-help-json/$', 'make_help_json_lint'),
     url(r'^make-help-json-lint/$', 'make_help_json_lint'),
 
     url(r'^make-help-url/$', 'make_help_url'),

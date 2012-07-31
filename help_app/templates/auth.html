@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block title %}What's for dinner homes?{% endblock %}
+{% block title %}What's for dinner?{% endblock %}
 {% block css %}<link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}" media="screen" title="bbxcss" />{% endblock %}
 {% block content %}
 <form id="start" action="/auth/" method="post">{% csrf_token %}
-<input name="pass" type="password" value="" placeholder="Password homes"/>
+<input style="width:97%" name="pass" type="password" value="" placeholder="Password homes"/>
 </form>
 {% endblock %}
