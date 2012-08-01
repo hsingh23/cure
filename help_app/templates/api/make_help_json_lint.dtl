@@ -10,7 +10,7 @@
 <script type="text/javascript">
     if (typeof JSON === 'undefined') {
         // TODO add static
-        document.write('<scr' + 'ipt type="te'+'xt/javascript" src="{% static "js/json2.j" %}"></sc' + 'ript>');
+        document.write('<scr' + 'ipt type="te'+'xt/javascript" src="{% static "js/json2.js" %}"></sc' + 'ript>');
     }
 </script>
 <script src="{% static 'js/jquery.js' %}" type="text/javascript"></script>
@@ -86,6 +86,7 @@
         <textarea id="json_input" name="json_input" class="span10 json_input" rows="15" cols="100" spellcheck="false" placeholder="Enter JSON to validate." value=""></textarea>
         <br/><br/>
         <button name="validate" id="validate" value="Validate" class="btn btn-large btn-success">Validate</button>
+        <a href="#" id="reset" class="btn btn-large btn-warning" onclick="reset(); return false;">Reset</a>
         <button onclick="send_request(); return false;" id="submit" value="Submit" class="btn btn-large btn-primary">Submit</button>
         <a style="float:right;" href="#" id="faqButton" class="btn btn-large btn-info" name="faqButton">FAQ</a>
         <a data-toggle="modal" href="#api" class="btn btn-large btn-info">API Explained</a>
@@ -244,8 +245,17 @@ Help API Explained:
     $(function() {
         $('#in-field').focus();
         $('#submit').hide();
+        $('#reset').hide();
         // $.get("http://statics.site50.net/json/help_api_explained_0002.html", function(data){$('#sample_goes_here').val(data);});
     });
+    function reset(){
+        $.post("/reset-keyword/",
+            { keyword: $("#in-field").val(), csrfmiddlewaretoken: $('[name=csrfmiddlewaretoken]').val()},
+            function(data) {
+                alert(data);
+            }
+        );
+    }
     function send_request(){
         $.post("/post-submit-json/",
             { keyword: $("#in-field").val(), json: $('#json_input').val(),csrfmiddlewaretoken: $('[name=csrfmiddlewaretoken]').val()},
@@ -264,12 +274,13 @@ Help API Explained:
             else{
                 $('#json_input').val(JSON.stringify(data));
             }
-        }).fail(function(){$('#submit').hide(); load_sample();}).done(function(){$("#validate").click(); $('#submit').hide();});
+        }).fail(function(){$('#submit').hide(); load_sample();}).done(function(){$("#validate").click(); $('#submit').hide(); $('#reset').show();});
     }
     function load_sample(){
         $.getJSON('http://get-json.herokuapp.com/?resource=http://statics.site50.net/json/sample_0003.json&callback=?', function(data) {
             $('#json_input').val(JSON.stringify(data));
         }).done(function(){$("#validate").click();});
+        $('#reset').show();
     }
 </script>
 </body>

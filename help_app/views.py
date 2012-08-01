@@ -119,6 +119,18 @@ def make_help_json_lint(request):
     request.session['back'] = '/make-help-json-lint/'
     return HttpResponseRedirect("/auth/")
 
+def reset(request):
+    if request.session.get('cool', False):
+        p = request.POST
+        if ("keyword" in p):
+            keyword=string.translate(str(p["keyword"]), tab, deletions)
+            cache.delete("db_"+keyword+"_json")
+            cache.delete("db_"+keyword+"_url")
+            return HttpResponse("Cleared!")
+    return HttpResponse(status=403)
+
+
+
 def get_initial(request):
     # we use get so we can CACHE
     get = request.GET

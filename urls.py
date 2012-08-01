@@ -33,6 +33,7 @@ urlpatterns = patterns('help_app.views',
     url(r'^make-help-url/$', 'make_help_url'),
     url(r'^post-submit-json/$', 'post_submit_json'),
     url(r'^post-submit-url/$', 'post_submit_url'),
+    url(r'^reset-keyword/$', 'reset'),
 
 
 )
