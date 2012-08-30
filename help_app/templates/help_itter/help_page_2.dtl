@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="description" content="A dynamicly generated help-page"/>
   <meta name="author" content="Harsh Singh and Alex Qian Zhang"/>
-  <link rel="shortcut icon"  href="http://statics.site50.net/img/favicon.ico" />
+  <link rel="shortcut icon"  href="{% static 'img/favicon.ico' %}" />
 {% load staticfiles %}
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet"/>
   <link href="{% static 'css/jquery.fancybox.css' %}" rel="stylesheet"/>
@@ -28,7 +28,7 @@
 
 <div class="row-fluid">
   <div class="span2">
-    <img src="http://statics.site50.net/img/uclogo_horz_bw.gif"/>
+    <img src="{% static 'img/uclogo_horz_bw.gif' %}"/>
     <br/><br/>
     <div class="well sidebar-nav">
 
