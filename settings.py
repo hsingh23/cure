@@ -179,7 +179,7 @@ try:
     if os.environ['PRODUCTION'] == 'True':
         DEBUG = False
         TEMPLATE_DEBUG = False
-        STATIC_URL = 'http://statics.site50.net/'
+        STATIC_URL = 'http://st4.herokuapp.com/'
         STATIC_ROOT = ''
         import dj_database_url
         DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
