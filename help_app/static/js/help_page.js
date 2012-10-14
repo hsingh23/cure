@@ -80,15 +80,22 @@ $(document).ready(function() {
         }
     });
     $(".various").fancybox({
-        // maxWidth : 800,
-        // maxHeight    : 600,
-        fitToView   : false,
-        width       : '90%',
-        height      : '90%',
-        autoSize    : false,
-        closeClick  : false,
-        openEffect  : 'none',
-        closeEffect : 'none'
+
+        type: 'iframe',
+        scrolling: 'no',
+        showNavArrows: false,
+        hideOnContentClick: false,
+        width:"100%",
+        height:"100%",
+        openEffect : 'elastic',
+        openSpeed  : 150,
+        closeEffect : 'elastic',
+        closeSpeed  : 150,
+        closeClick : true,
+        helpers : {
+            overlay : null
+        }
+
     });
     HelpSpace.api_docs.hide();
     HelpSpace.in_field.bind('keypress', function(e) {
@@ -443,9 +450,9 @@ function load_from_api(search, options){
             var sidebar_pdf = [];
             $.each(data.pdf, function(key, val) {
                 if (key <= 2) {
-                    sidebar_pdf.push('<a class="various fancybox.iframe" rel="tooltip" title="'+val[0]+'" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+shorten(val[0])+'</a><br/>');
+                    sidebar_pdf.push('<a class="various" title="'+val[0]+'" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+shorten(val[0])+'</a><br/>');
                 }
-                pdf.push('<a class="various fancybox.iframe" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
+                pdf.push('<a class="various" href="https://viewer.zoho.com/api/urlview.do?embed=true&url='+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
             });
             HelpSpace.sidebar_pdf.append(sidebar_pdf.join('\n'));
             HelpSpace.pdf.append(pdf.join('\n'));
