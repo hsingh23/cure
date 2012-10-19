@@ -92,9 +92,9 @@ $(document).ready(function() {
         closeEffect : 'elastic',
         closeSpeed  : 150,
         closeClick : true,
-        helpers : {
-            overlay : null
-        }
+        // helpers : {
+        //     overlay : null
+        // }
 
     });
     HelpSpace.api_docs.hide();
@@ -208,7 +208,7 @@ function parse_initial(data){
     var initial_swf = [];
     if (data.initial_swf){
         $.each(data.initial_swf, function(key, val) {
-            initial_swf.push('<a class="various"  rel="tooltip" title="'+key+'" href="'+val+'">'+shorten(key)+'</a><br/>');
+            initial_swf.push('<a class="various" title="'+key+'" href="'+val+'">'+shorten(key)+'</a><br/>');
         });
     }
     // else if(data.initial_swf){
@@ -221,11 +221,11 @@ function parse_initial(data){
     if (data.initial_youtube_id){
         if (data.initial_swf instanceof Array){
             $.each(data.initial_youtube_id, function(key, val) {
-                videos.push('<div class="item"><iframe id="player" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val+'?wmode=transparent&origin=http://cure.herokuapp.com/" frameborder="0"></iframe></div>');
+                videos.push('<div class="item"><iframe id="ytplayer" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val+'?wmode=transparent&controls=2&fs=1" frameborder="0"></iframe></div>');
             });
         }
         else{
-            videos.push('<div class="item"><iframe id="player" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+data.initial_swf+'?wmode=transparent&origin=http://cure.herokuapp.com/" frameborder="0"></iframe></div>');
+            videos.push('<div class="item"><iframe id="ytplayer" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+data.initial_swf+'?wmode=transparent&controls=2&fs=1" frameborder="0"></iframe></div>');
         }
     }
     HelpSpace.video_flow_items.prepend(videos.join('\n'));
@@ -274,7 +274,7 @@ function load_class(orig_search, val){
             links.push('<li class="nav-header" id="li-hook">Eck Notes</li>');
             $.each(data.eck, function(k,v){
                 if (k <= 2){
-                    links.push('<a class="various fancybox.iframe" rel="tooltip" title="'+v[0]+'" href="'+v[1]+'">'+shorten(v[0])+'</a><br/>');
+                    links.push('<a class="various fancybox.iframe" title="'+v[0]+'" href="'+v[1]+'">'+shorten(v[0])+'</a><br/>');
                 }
             });
             HelpSpace.related_hook.append(links.join('\n'));
@@ -331,17 +331,17 @@ function load_results(orig_search, options){
             $.each(data.responseData.results, function(index, val) {
                 if (index%4 === 0) {
                     if (index === 0) {
-                        items.push('<div class="item active"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+                        items.push('<div class="item active"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" rel="img" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
                     }
                     else {
-                        items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+                        items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" rel="img" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
                     }
                 }
                 else if (index%4 !== 3){
-                    items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
+                    items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" rel="img" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li>');
                 }
                 else {
-                    items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li></div>');
+                    items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" rel="img" href="'+val.url+'" title="'+val.titleNoFormatting+'"><img src="'+val.tbUrl+'" alt="" height="125px" width="100%"></a></div></li></div>');
                 }
             });
             HelpSpace.picture_flow_items.append(items.join('\n'));
@@ -356,7 +356,7 @@ function load_results(orig_search, options){
             var videos = [];
             $.each(data.data.items, function(index, val) {
                 var active = (index===1)?' active':'';
-                videos.push('<div class="item'+active+'"class="center"><iframe id="player" id="videos" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent&origin=http://cure.herokuapp.com/" frameborder="0"></iframe></div>');
+                videos.push('<div class="item'+active+'"class="center"><iframe id="player" id="videos" type="text/html" width="100%" height="500px" src="http://www.youtube.com/embed/'+val.id+'?wmode=transparent&controls=2&fs=1" frameborder="0"></iframe></div>');
             });
             HelpSpace.video_flow_items.append(videos.join('\n'));
         });
@@ -425,7 +425,7 @@ function load_from_api(search, options){
             var sidebar_interview = [];
             $.each(data.interview, function(key, val) {
                 if (key <= 2) {
-                    sidebar_interview.push('<a class="various fancybox.iframe" rel="tooltip" title="'+val[0]+'" href="'+val[1]+'">'+shorten(val[0])+'</a><br/>');
+                    sidebar_interview.push('<a class="various fancybox.iframe" title="'+val[0]+'" href="'+val[1]+'">'+shorten(val[0])+'</a><br/>');
                 }
                 interview.push('<a class="various fancybox.iframe" href="'+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
             });
@@ -498,7 +498,7 @@ function load_from_api(search, options){
             var sidebar_swf = [];
             $.each(data.swf, function(key, val) {
                 if (key <= 2) {
-                    sidebar_swf.push('<a class="various fancybox.iframe" rel="tooltip" title="'+val[0]+'" href="'+val[1]+'">'+shorten(val[0])+'</a><br/>');
+                    sidebar_swf.push('<a class="various fancybox.iframe" title="'+val[0]+'" href="'+val[1]+'">'+shorten(val[0])+'</a><br/>');
                 }
                 swf.push('<a class="various fancybox.iframe" href="'+val[1]+'">'+(key+1)+') '+val[0]+'</a><br/>');
             });
@@ -528,17 +528,17 @@ function load_from_api(search, options){
                 if (index <= 15) {
                     if (index%4 === 0) {
                         if (index === 0) {
-                            items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+                            items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" rel="img" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
                         }
                         else {
-                            items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+                            items.push('<div class="item"><ul class="thumbnails"><li class="span3"><div class="thumbnail"><a class="fancybox" rel="img" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
                         }
                     }
                     else if (index%4 !== 3){
-                        items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
+                        items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" rel="img" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li>');
                     }
                     else {
-                        items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li></div>');
+                        items.push('<li class="span3"><div class="thumbnail"><a class="fancybox" rel="img" href="'+val[0]+'"><img src="'+val[1]+'" alt="" height="125px" width="100%"></a></div></li></div>');
                     }
                 }
             });
