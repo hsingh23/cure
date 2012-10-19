@@ -28,7 +28,7 @@
 
 <div class="row-fluid">
   <div class="span2">
-    <img src="{% static 'img/uclogo_horz_bw.gif' %}"/>
+    <img src="{% static 'img/dat.gif' %}"/>
     <br/><br/>
     <div class="well sidebar-nav">
 
