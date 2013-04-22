@@ -3,9 +3,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>Help</title>
+  <title>Cure: Serendipitous Search</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="A dynamicly generated help-page"/>
+  <meta name="description" content="Serendipitous Search like a boss"/>
   <meta name="author" content="Harsh Singh and Alex Qian Zhang"/>
   <link rel="shortcut icon"  href="{% static 'img/favicon.ico' %}" />
   <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">

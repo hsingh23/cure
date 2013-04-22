@@ -306,7 +306,7 @@ HelpSpace.parse_initial = function(data) {
   }
 };
 
-HelpSpace.load_initial_data = function(initial) {
+HelpSpace.load_initial_data = function(initial, options) {
   'use strict';
   $.getJSON('/get-initial/?search=' + initial + '&callback=?', function(data) {
     if (data && data.type && data.type === 'url') {
@@ -344,7 +344,7 @@ HelpSpace.disable_input = function() {
   },2500);
 };
 
-HelpSpace.my_search = function(search_term) {
+HelpSpace.my_search = function(search_term, nowiki) {
   'use strict';
   if (search_term[0] === '#') {
     HelpSpace.in_field.val(search_term.replace('#', $.initial_search_term));
