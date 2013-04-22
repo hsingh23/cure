@@ -13,6 +13,7 @@ urlpatterns = patterns('help_app.views',
     # url(r'^$', 'help_app.views.home', name='home'),
     # url(r'^help_app/', include('help_app.foo.urls')),
     url(r'^help/$', 'help'),
+    url(r'^dev/$', 'dev'),
     url(r'^auth/$', 'authenticate'),
 
     url(r'^make/$', 'make_help'),

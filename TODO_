@@ -1,0 +1,14 @@
+TODO:
+    reload current data into forms [new input method]
+    clean up templates
+    clean up views
+    get error message
+Ideas:
+    people suggest pdfs, html5, swf content and for keyword and teacher gets an alert
+Problems:
+    animated content always sucks for cs [1]
+
+Solutions:
+    [1] opt out for auto everything in init. opt in for swf.
+
+Bugs:

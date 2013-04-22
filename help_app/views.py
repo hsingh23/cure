@@ -25,7 +25,10 @@ letter_set = frozenset(string.ascii_lowercase + string.ascii_uppercase + string.
 deletions = ''.join(ch for ch in map(chr,range(256)) if ch not in letter_set)
 
 def help(request):
-    return render_to_response("help_itter/help_page_2.dtl")
+    return render_to_response("help_itter/help_page_2.dtl", {'help_js_url': "js/help_page_0005.js"})
+
+def dev(request):
+    return render_to_response("help_itter/help_page_2.dtl", {'help_js_url': "js/help_page.js"})
 
 def help_itter(request, itter):
     if int(itter) < 3 and int(itter) > 0:
