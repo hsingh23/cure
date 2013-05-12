@@ -34,9 +34,6 @@ def help_itter(request, itter):
     if int(itter) < 3 and int(itter) > 0:
         return render_to_response("help_itter/help_page_"+str(itter)+".dtl")
 
-def r(request):
-    return render_to_response('google04c78a565d540489.html')
-
 
 
 # Cache this for 5 days
