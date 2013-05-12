@@ -14,6 +14,7 @@ urlpatterns = patterns('help_app.views',
     # url(r'^help_app/', include('help_app.foo.urls')),
     url(r'^help/$', 'help'),
     url(r'^help(\d{1,2})/$', 'help_itter'),
+    url(r'^google04c78a565d540489.html$', 'r'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
