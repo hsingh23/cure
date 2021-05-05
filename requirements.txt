@@ -1,4 +1,4 @@
-Django==1.4
+Django==2.2.21
 argparse==1.2.1
 beautifulsoup4==4.1.0
 distribute==0.6.24
