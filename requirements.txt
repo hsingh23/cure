@@ -6,7 +6,7 @@ dj-database-url==0.2.1
 django-heroku-memcacheify==0.3
 django-pylibmc-sasl==0.2.4
 gunicorn==0.14.6
-ipython==0.12.1
+ipython==1.2.0
 psycopg2==2.4.5
 pylibmc==1.2.3
 wsgiref==0.1.2
